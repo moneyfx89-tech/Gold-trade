@@ -1,0 +1,64 @@
+//@version=5
+// Gold Record System: ระบบเทรดทอง M15 ตามเทรนด์ H1 + ส่งผลเข้า Discord อัตโนมัติ
+// ใช้กับกราฟ XAUUSD ไทม์เฟรม 15 นาที
+// ตั้ง Alert: Condition = สคริปต์นี้, Message = {{strategy.order.alert_message}}
+//            Webhook URL = https://<โดเมนบอท>/webhook
+strategy("Gold Record System", overlay=true, initial_capital=10000,
+     default_qty_type=strategy.percent_of_equity, default_qty_value=10,
+     process_orders_on_close=true)
+
+secret   = input.string("CHANGE_ME", "Webhook secret (ต้องตรงกับ WEBHOOK_SECRET ของบอท)")
+symName  = input.string("XAUUSD", "ชื่อสินค้าที่แสดงใน Discord")
+emaFastL = input.int(50, "EMA เร็ว (H1)")
+emaSlowL = input.int(200, "EMA ช้า (H1)")
+emaPullL = input.int(20, "EMA จุดย่อ (M15)")
+atrLen   = input.int(14, "ATR length")
+atrMult  = input.float(1.5, "SL = ATR x", step=0.1)
+rr       = input.float(2.0, "RR (TP = SL x)", step=0.1)
+sess     = input.session("1400-2300", "ช่วงเวลาเทรด (เวลาไทย)")
+
+// เทรนด์ H1 ใช้แท่งที่ปิดแล้วเท่านั้น จึงไม่ repaint
+h1Fast = request.security(syminfo.tickerid, "60", ta.ema(close, emaFastL)[1], lookahead=barmerge.lookahead_on)
+h1Slow = request.security(syminfo.tickerid, "60", ta.ema(close, emaSlowL)[1], lookahead=barmerge.lookahead_on)
+pull   = ta.ema(close, emaPullL)
+atr    = ta.atr(atrLen)
+
+inSession = not na(time(timeframe.period, sess, "Asia/Bangkok"))
+flat      = strategy.position_size == 0
+upTrend   = h1Fast > h1Slow
+downTrend = h1Fast < h1Slow
+
+// ย่อแตะ EMA20 แล้วปิดกลับตามเทรนด์ด้วยแท่งยืนยัน
+longSig  = flat and inSession and upTrend   and low  <= pull and close > pull and close > open
+shortSig = flat and inSession and downTrend and high >= pull and close < pull and close < open
+
+f(x) => str.tostring(x, format.mintick)
+
+openMsg(side, ref, entry, sl, tp) =>
+    '{"secret":"' + secret + '","action":"open","symbol":"' + symName + '","side":"' + side +
+     '","entry":' + f(entry) + ',"sl":' + f(sl) + ',"tp":' + f(tp) + ',"ref":"' + ref +
+     '","note":"H1 trend + M15 EMA pullback"}'
+
+closeMsg(ref) =>
+    '{"secret":"' + secret + '","action":"close","ref":"' + ref + '","price":{{strategy.order.price}}}'
+
+var string ref = ""
+
+if longSig
+    ref := "G" + str.tostring(bar_index)
+    sl = close - atr * atrMult
+    tp = close + (close - sl) * rr
+    strategy.entry(ref, strategy.long, alert_message=openMsg("BUY", ref, close, sl, tp))
+    strategy.exit("X" + ref, ref, stop=sl, limit=tp, alert_message=closeMsg(ref))
+
+if shortSig
+    ref := "G" + str.tostring(bar_index)
+    sl = close + atr * atrMult
+    tp = close - (sl - close) * rr
+    strategy.entry(ref, strategy.short, alert_message=openMsg("SELL", ref, close, sl, tp))
+    strategy.exit("X" + ref, ref, stop=sl, limit=tp, alert_message=closeMsg(ref))
+
+plot(h1Fast, "EMA50 H1", color=color.orange)
+plot(h1Slow, "EMA200 H1", color=color.purple)
+plot(pull, "EMA20 M15", color=color.new(color.gray, 40))
+bgcolor(inSession ? color.new(color.yellow, 93) : na, title="ช่วงเวลาเทรด")
