@@ -1,0 +1,240 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:LaoH,Lat;src:url(fonts/noto-sans-lao-lao-800-normal.woff2);font-weight:800}
+@font-face{font-family:LaoH,Lat;src:url(fonts/noto-sans-lao-lao-700-normal.woff2);font-weight:700}
+@font-face{font-family:LaoL,Lat;src:url(fonts/noto-sans-lao-looped-lao-700-normal.woff2);font-weight:700}
+@font-face{font-family:LaoL,Lat;src:url(fonts/noto-sans-lao-looped-lao-800-normal.woff2);font-weight:800}
+@font-face{font-family:Lat;src:url(fonts/noto-sans-latin-800-normal.woff2);font-weight:800}
+@font-face{font-family:Lat;src:url(fonts/noto-sans-latin-700-normal.woff2);font-weight:700}
+:root{--gold:#F5C542;--gold2:#FFE08A;--red:#FF3B4E;--green:#22D38A;--blue:#4DA3FF;--ink:#0A1024;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink);color:#fff;font-family:Lat,LaoL,sans-serif;font-weight:700}
+#bg{position:absolute;inset:0;background:radial-gradient(1200px 900px at 50% 30%,#1B2A5C 0%,#0A1024 60%,#05081A 100%)}
+#grid{position:absolute;inset:-200px;opacity:.10;background-image:linear-gradient(var(--gold) 1px,transparent 1px),linear-gradient(90deg,var(--gold) 1px,transparent 1px);background-size:90px 90px}
+.dust{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--gold2);filter:blur(1px)}
+#header{position:absolute;top:70px;left:60px;right:60px;height:130px;display:flex;align-items:center;gap:26px}
+#badge{background:var(--red);padding:14px 30px;border-radius:14px;font-family:LaoH,Lat;font-weight:800;font-size:46px;box-shadow:0 0 40px rgba(255,59,78,.6)}
+#brand{font-family:LaoH,Lat;font-weight:800;font-size:60px;color:var(--gold);letter-spacing:1px}
+#xau{margin-left:auto;font-size:30px;color:#cfd6ee;border:2px solid var(--line);padding:10px 20px;border-radius:12px}
+#live{display:inline-block;width:16px;height:16px;border-radius:50%;background:var(--red);margin-right:10px;vertical-align:middle}
+.scene{position:absolute;left:60px;right:60px;top:250px;height:1060px;display:none}
+.h1{font-family:LaoH,Lat,sans-serif;font-weight:800}
+.card{background:var(--card);border:2px solid var(--line);border-radius:28px;padding:30px 36px}
+#subbox{position:absolute;left:50px;right:50px;top:1345px;min-height:230px;display:flex;align-items:center;justify-content:center;text-align:center;background:rgba(5,8,26,.78);border:3px solid rgba(245,197,66,.55);border-radius:30px;padding:26px 40px}
+#sub{font-family:LaoL,Lat;font-weight:800;font-size:62px;line-height:1.45;text-shadow:0 4px 0 rgba(0,0,0,.5)}
+#sub b{color:var(--gold)}
+#ticker{position:absolute;left:0;right:0;top:1620px;height:74px;background:var(--gold);color:#1a1200;overflow:hidden;white-space:nowrap}
+#tick{position:absolute;top:10px;font-family:LaoH,Lat;font-weight:800;font-size:38px}
+#prog{position:absolute;left:0;top:1694px;height:8px;background:var(--red)}
+/* hook */
+#hookTitle{position:absolute;left:0;right:0;top:640px;text-align:center}
+#hookTitle .a{font-size:150px;color:var(--red);line-height:1.2;text-shadow:0 0 60px rgba(255,59,78,.5)}
+#hookTitle .b{font-size:96px;color:#fff}
+#chips{position:absolute;left:0;right:0;top:930px;display:flex;justify-content:center;gap:40px}
+.chip{font-family:Lat;font-weight:800;font-size:76px;padding:12px 50px;border-radius:22px;border:4px solid var(--gold);color:var(--gold);background:rgba(245,197,66,.08)}
+/* explain */
+.ex{display:flex;align-items:center;gap:36px;margin-bottom:34px;transition:none}
+.ex .ic{width:170px;height:170px;flex:none;border-radius:30px;background:rgba(245,197,66,.12);display:flex;align-items:center;justify-content:center}
+.ex .t1{font-family:Lat;font-weight:800;font-size:72px;color:var(--gold)}
+.ex .t2{font-family:LaoL,Lat;font-size:44px;color:#dfe5f7;line-height:1.4}
+.arrow{text-align:center;font-size:70px;color:var(--gold);margin:-14px 0 14px;font-family:Lat}
+/* hotcold */
+#hc{display:flex;gap:30px;height:1000px}
+.pan{flex:1;border-radius:32px;padding:34px 26px;border:3px solid var(--line);background:var(--card)}
+.pan h2{font-family:LaoH,Lat;font-weight:800;font-size:68px;text-align:center;margin-bottom:28px}
+.step{font-family:LaoL,Lat;font-weight:800;font-size:46px;text-align:center;padding:22px 10px;border-radius:20px;margin-bottom:16px;background:rgba(255,255,255,.06)}
+.step .ar{font-family:Lat;font-size:56px}
+.dn{color:var(--red)} .up{color:var(--green)}
+/* story */
+.who{display:flex;align-items:center;gap:30px}
+.av{width:150px;height:150px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Lat;font-weight:800;font-size:84px}
+.name{font-family:LaoH,Lat;font-weight:800;font-size:78px}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:46px;padding:14px 0;border-bottom:2px solid var(--line);font-family:Lat,LaoL}
+.row:last-child{border:0}
+.clock{font-family:Lat;font-weight:800;font-size:64px;padding:8px 26px;border-radius:16px;border:3px solid var(--line)}
+.eqbar{height:46px;border-radius:23px;background:rgba(255,255,255,.1);overflow:hidden}
+.eqbar div{height:100%;border-radius:23px}
+.big{font-family:Lat;font-weight:800}
+/* lessons */
+.les{display:flex;gap:30px;align-items:center;margin-bottom:36px}
+.les .n{width:130px;height:130px;flex:none;border-radius:50%;background:var(--gold);color:#1a1200;display:flex;align-items:center;justify-content:center;font-family:Lat;font-weight:800;font-size:72px}
+.les .tx{font-family:LaoL,Lat;font-weight:800;font-size:52px;line-height:1.35}
+.les .tx small{display:block;font-size:38px;color:#cfd6ee;font-weight:700}
+.cta{display:inline-block;background:var(--red);font-family:LaoH,Lat;font-weight:800;font-size:84px;padding:30px 70px;border-radius:30px;box-shadow:0 0 60px rgba(255,59,78,.6)}
+</style></head><body>
+<div id="bg"></div><div id="grid"></div><div id="dusts"></div>
+<div id="header"><div id="badge">ຂ່າວດ່ວນ</div><div id="brand">ສາຍຄຳ</div><div id="xau"><span id="live"></span>XAU/USD</div></div>
+
+<div class="scene" id="s_hook">
+ <svg id="hchart" width="960" height="620" viewBox="0 0 960 620" style="position:absolute;top:0;left:0">
+  <g stroke="rgba(255,255,255,.08)" stroke-width="2">
+   <line x1="0" y1="100" x2="960" y2="100"/><line x1="0" y1="230" x2="960" y2="230"/><line x1="0" y1="360" x2="960" y2="360"/><line x1="0" y1="490" x2="960" y2="490"/></g>
+  <defs><linearGradient id="gR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF3B4E" stop-opacity=".45"/><stop offset="1" stop-color="#FF3B4E" stop-opacity="0"/></linearGradient></defs>
+  <path id="harea" fill="url(#gR)"/>
+  <path id="hline" fill="none" stroke="#FF3B4E" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle id="hdot" r="16" fill="#FF3B4E"/>
+ </svg>
+ <div id="hookTitle"><div class="a h1" id="ht1">ຄຳຮ່ວງ</div><div class="b h1" id="ht2">ເພາະຫຍັງ?</div></div>
+ <div id="chips"><div class="chip" id="c1">CPI</div><div class="chip" id="c2">PPI</div></div>
+</div>
+
+<div class="scene" id="s_explain">
+ <div class="h1" style="font-size:64px;color:var(--gold);margin:10px 0 40px">ຕົວເລກເງິນເຟີ້ ທີ່ເຟດເບິ່ງ</div>
+ <div class="ex card" id="e_cpi"><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#F5C542" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="19" cy="21" r="1.5"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg></div><div><div class="t1">CPI</div><div class="t2">ລາຄາຂອງທີ່ເຮົາຈ່າຍທຸກມື້</div></div></div>
+ <div class="ex card" id="e_ppi"><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#F5C542" stroke-width="2" stroke-linejoin="round"><path d="M2 21V10l6 4V10l6 4V4h4l1 17z"/><path d="M2 21h20"/></svg></div><div><div class="t1">PPI</div><div class="t2">ຕົ້ນທຶນຜູ້ຜະລິດ → ລາຄາສິນຄ້າ</div></div></div>
+ <div class="arrow" id="e_ar">↓</div>
+ <div class="ex card" id="e_fed"><div class="ic"><svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#F5C542" stroke-width="2" stroke-linejoin="round"><path d="M3 9l9-6 9 6z"/><path d="M5 9v9M9.5 9v9M14.5 9v9M19 9v9M3 21h18M3 18h18"/></svg></div><div><div class="t1">FED</div><div class="t2">ທະນາຄານກາງສະຫະລັດ<br>ຕັດສິນດອກເບ້ຍ</div></div></div>
+</div>
+
+<div class="scene" id="s_hotcold"><div id="hc">
+ <div class="pan" id="p_hot"><h2 style="color:var(--red)">ຮ້ອນກວ່າຄາດ</h2>
+  <div class="step" id="h1">ເງິນເຟີ້ <span class="dn">ສູງ</span></div>
+  <div class="step" id="h2">ດອກເບ້ຍ <span class="ar dn">↑</span></div>
+  <div class="step" id="h3">USD / Yield <span class="ar dn">↑</span></div>
+  <div class="step" id="h4" style="font-size:58px">ຄຳ <span class="ar dn">↓</span><br><span class="dn" style="font-size:40px">ຖືກເທຂາຍ</span></div></div>
+ <div class="pan" id="p_cold"><h2 style="color:var(--blue)">ເຢັນກວ່າຄາດ</h2>
+  <div class="step" id="k1">ເງິນເຟີ້ <span style="color:var(--blue)">ຕ່ຳ</span></div>
+  <div class="step" id="k2">ແຮງກົດດັນ<br>ດອກເບ້ຍ <span class="up">ຜ່ອນ</span></div>
+  <div class="step" id="k3" style="font-size:58px">ຄຳ <span class="ar up">↑</span><br><span class="up" style="font-size:40px">ມີລຸ້ນເດັ້ງ</span></div></div>
+</div></div>
+
+<div class="scene" id="s_storyA">
+ <div style="display:flex;justify-content:space-between;align-items:center">
+  <div class="who"><div class="av" style="background:#3a1620;border:5px solid var(--red);color:var(--red)">A</div><div class="name">ທ້າວເອ</div></div>
+  <div class="clock" id="aclock">20:29:50</div></div>
+ <div class="card" id="aticket" style="margin-top:34px">
+  <div class="row"><span>XAUUSD</span><span class="big" style="color:var(--green)">BUY</span></div>
+  <div class="row" id="arLot"><span>Lot</span><span class="big" style="color:var(--gold)">ໜັກ</span></div>
+  <div class="row" id="arSL"><span>Stop Loss</span><span class="big" style="color:var(--red)">✕ ບໍ່ມີ</span></div></div>
+ <div class="card" id="achart" style="margin-top:30px;padding:20px;position:relative">
+  <svg width="900" height="330" viewBox="0 0 900 330"><path id="aline" fill="none" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/><line id="aentry" x1="0" x2="900" stroke="#22D38A" stroke-width="3" stroke-dasharray="14 10"/></svg>
+  <div id="aflash" class="h1" style="position:absolute;top:24px;right:30px;font-size:46px;color:var(--red)">ຮ້ອນກວ່າຄາດ!</div></div>
+ <div style="margin-top:30px"><div style="display:flex;justify-content:space-between;font-size:44px;margin-bottom:14px"><span class="h1">ພອດ</span><span class="big" id="aeq">100%</span></div><div class="eqbar"><div id="aeqb"></div></div></div>
+</div>
+
+<div class="scene" id="s_storyB">
+ <div style="display:flex;justify-content:space-between;align-items:center">
+  <div class="who"><div class="av" style="background:#0f3326;border:5px solid var(--green);color:var(--green)">B</div><div class="name">ນາງບີ</div></div>
+  <div class="clock" id="bclock" style="font-size:44px">ປະຕິທິນຂ່າວ</div></div>
+ <div class="card" id="bcal" style="margin-top:34px"><div class="row"><span>20:30 &nbsp;USD</span><span>ເງິນເຟີ້ <span style="color:var(--red)">★★★</span></span></div></div>
+ <div class="card" id="bticket" style="margin-top:24px">
+  <div class="row"><span>Lot</span><span class="big" style="color:var(--gold)">ນ້ອຍ</span></div>
+  <div class="row"><span>Stop Loss</span><span class="big" style="color:var(--green)">✓ ຕັ້ງແລ້ວ</span></div></div>
+ <div class="card" id="bwait" style="margin-top:24px"><div style="font-size:44px;margin-bottom:16px" class="h1">ລໍຖ້າ 15–30 ນາທີ</div><div class="eqbar"><div id="bwb" style="background:var(--gold)"></div></div></div>
+ <div class="card" id="bchart" style="margin-top:24px;padding:20px;position:relative">
+  <svg width="900" height="250" viewBox="0 0 900 250"><line x1="0" x2="900" y1="120" y2="120" stroke="#4DA3FF" stroke-width="3" stroke-dasharray="14 10"/><text x="12" y="108" fill="#4DA3FF" font-size="30" font-family="LaoL,Lat">ແນວຮັບ</text><path id="bline" fill="none" stroke="#F5C542" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/><g id="bsell"><circle r="22" fill="#FF3B4E"/><text y="70" text-anchor="middle" fill="#FF3B4E" font-size="40" font-family="Lat" font-weight="800">SELL</text></g></svg></div>
+</div>
+
+<div class="scene" id="s_versus">
+ <div class="h1" style="text-align:center;font-size:76px;color:var(--gold);margin-top:20px">ຄືນດຽວ ຂ່າວດຽວ</div>
+ <div style="display:flex;gap:30px;margin-top:60px">
+  <div class="card" id="vA" style="flex:1;text-align:center;border-color:var(--red)"><div class="av" style="margin:0 auto;background:#3a1620;border:5px solid var(--red);color:var(--red)">A</div><div class="name" style="margin-top:20px">ທ້າວເອ</div><div class="big" style="font-size:120px;color:var(--red);margin-top:30px">−50%</div><div style="font-size:40px;color:#cfd6ee" class="h1">ເທຣດຕາມຄວາມເຊື່ອ</div></div>
+  <div class="card" id="vB" style="flex:1;text-align:center;border-color:var(--green)"><div class="av" style="margin:0 auto;background:#0f3326;border:5px solid var(--green);color:var(--green)">B</div><div class="name" style="margin-top:20px">ນາງບີ</div><div class="big" style="font-size:120px;color:var(--green);margin-top:30px">+ກຳໄລ</div><div style="font-size:40px;color:#cfd6ee" class="h1">ເທຣດຕາມແຜນ</div></div></div>
+ <div class="big" id="vs" style="position:absolute;left:0;right:0;top:420px;text-align:center;font-size:110px;color:var(--gold);text-shadow:0 0 40px rgba(245,197,66,.7)">VS</div>
+</div>
+
+<div class="scene" id="s_lessons">
+ <div class="h1" style="font-size:84px;color:var(--gold);margin:10px 0 56px">ບົດຮຽນ 3 ຂໍ້</div>
+ <div class="les" id="l1"><div class="n">1</div><div class="tx">ເບິ່ງປະຕິທິນເສດຖະກິດທຸກເຊົ້າ<small>CPI • PPI • ການຈ້າງງານ • ເຟດປະຊຸມ</small></div></div>
+ <div class="les" id="l2"><div class="n">2</div><div class="tx">ກ່ອນຂ່າວໃຫຍ່ ຫຼຸດ Lot<small>ຕັ້ງ Stop Loss ທຸກຄັ້ງ ບໍ່ມີຂໍ້ຍົກເວັ້ນ</small></div></div>
+ <div class="les" id="l3"><div class="n">3</div><div class="tx">ຢ່າເທຣດຕາມຄວາມເຊື່ອ<small>ເທຣດຕາມຕົວເລກ ແລະ ແຜນ</small></div></div>
+</div>
+
+<div class="scene" id="s_outro">
+ <div class="h1" id="o0" style="text-align:center;font-size:130px;color:var(--gold);margin-top:30px">ສະຫຼຸບ</div>
+ <div id="o1" style="display:flex;justify-content:center;align-items:center;gap:26px;margin-top:60px">
+  <div class="card h1" style="font-size:54px;text-align:center">ດອກເບ້ຍ</div><div class="big" style="font-size:60px">+</div><div class="card h1" style="font-size:54px;text-align:center">ດອນລາ</div><div class="big" style="font-size:60px;color:var(--gold)">→</div><div class="card h1" style="font-size:54px;color:var(--gold);border-color:var(--gold)">ຄຳ</div></div>
+ <div id="o2" style="text-align:center;margin-top:110px"><div class="cta" id="ctab">ພິມ “ສົນໃຈ”</div><div class="h1" style="font-size:46px;margin-top:34px;color:#dfe5f7">ເພື່ອເຂົ້າກຸ່ມຂ່າວຄຳ</div></div>
+ <div style="position:absolute;bottom:0;left:0;right:0;text-align:center;font-size:32px;color:#9aa3c0;font-family:LaoL">ເນື້ອຫາເພື່ອການສຶກສາ ບໍ່ແມ່ນຄຳແນະນຳການລົງທຶນ</div>
+</div>
+
+<div id="subbox"><div id="sub"></div></div>
+<div id="ticker"><div id="tick"></div></div><div id="prog"></div>
+<script>
+const TLD = __TL__; const L=TLD.lines, TOTAL=TLD.total;
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>{x=cl(x);return 1-Math.pow(1-x,3)};
+const back=x=>{x=cl(x);const c=1.7;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+// dust
+const D=[];for(let i=0;i<34;i++){const d=document.createElement('div');d.className='dust';$('dusts').appendChild(d);D.push([Math.random()*1080,Math.random()*1920,10+Math.random()*30,Math.random()*6.28,.2+Math.random()*.5])}
+$('tick').textContent=('ຂ່າວຄຳ  •  XAU/USD  •  CPI  •  PPI  •  ເຟດ  •  ດອກເບ້ຍ  •  ດອນລາ  •  ບອນຢີລ  •  ').repeat(6);
+const scenes=['hook','explain','hotcold','storyA','storyB','versus','lessons','outro'];
+// scene-start times & within-group index
+const sStart={};L.forEach(l=>{if(!(l.scene in sStart))sStart[l.scene]=l.start});
+function since(scene,pred){const f=L.find(l=>l.scene==scene&&pred(l));return f?f.start:1e9}
+function pop(el,t0,t){const p=back((t-t0)/0.35);el.style.opacity=cl((t-t0)/0.2);el.style.transform=`translateY(${(1-ease((t-t0)/0.35))*50}px) scale(${0.85+0.15*p})`}
+function hide(el){el.style.opacity=0}
+function pathFrom(pts){return 'M'+pts.map(p=>p.join(',')).join(' L')}
+// hook chart points
+const HP=[];for(let i=0;i<=40;i++){const x=i*24;let y=200+Math.sin(i*.9)*18-(i<14?i*6:84-(i-14)*14);y+= (i>26? (i-26)*6:0);HP.push([x,cl(y,60,560)])}
+function sub(txt){return txt.replace(/(CPI|PPI|Buy|Sell|Stop Loss|Lot|ເຟດ|ຄຳ(?!ຕອບ|ວ່າ))/g,'<b>$1</b>')}
+let lastSub=-1;
+function draw(t){
+ // bg
+ $('grid').style.transform=`translate(${(t*18)%90}px,${(t*30)%90}px)`;
+ D.forEach((d,i)=>{const el=$('dusts').children[i];const y=(d[1]-t*d[2]*3)%1920;el.style.transform=`translate(${d[0]+Math.sin(t*d[4]+d[3])*30}px,${y<0?y+1920:y}px)`;el.style.opacity=.25+.35*Math.sin(t*1.3+d[3])**2});
+ $('badge').style.transform=`scale(${1+0.04*Math.sin(t*6)})`;
+ $('live').style.opacity=(Math.floor(t*2)%2)?1:.25;
+ $('tick').style.left=(-((t*120)%1600))+'px';
+ $('prog').style.width=(t/TOTAL*1080)+'px';
+ let idx=-1;for(let i=0;i<L.length;i++)if(L[i].start<=t+0.05)idx=i;
+ const cur=idx<0?L[0]:L[idx]; const sc=cur.scene; const ss=t-sStart[sc];
+ scenes.forEach(s=>{$('s_'+s).style.display=s==sc?'block':'none'});
+ const S=$('s_'+sc);S.style.opacity=cl(ss/0.35);S.style.transform=`translateY(${(1-ease(ss/0.45))*60}px)`;
+ // subtitle
+ const sb=$('sub'),box=$('subbox');
+ if(idx>=0 && t<=cur.end+0.22){ if(lastSub!=idx){sb.innerHTML=sub(cur.text);lastSub=idx} const p=t-cur.start; box.style.opacity=1; sb.style.transform=`scale(${0.9+0.1*back(p/0.25)})`; sb.style.opacity=cl(p/0.12)}
+ else { box.style.opacity=idx<0?0:0.0001+ (idx<0?0:1); }
+ const ks=k=>since(sc,l=>l.key===k), kn=k=>since(sc,l=>l.key>=k);
+ if(sc=='hook'){
+  const p=ease(ss/4.5);const n=Math.max(2,Math.round(p*HP.length));const pts=HP.slice(0,n);
+  $('hline').setAttribute('d',pathFrom(pts));$('harea').setAttribute('d',pathFrom(pts)+` L${pts[pts.length-1][0]},620 L0,620 Z`);
+  const lp=pts[pts.length-1];$('hdot').setAttribute('cx',lp[0]);$('hdot').setAttribute('cy',lp[1]);$('hdot').setAttribute('r',14+5*Math.sin(t*8));
+  const k2=kn(2),k3=kn(3); t>=k2-0.0?pop($('ht1'),k2,t):hide($('ht1')); t>=k2+0.4?pop($('ht2'),k2+0.4,t):hide($('ht2'));
+  if(t<kn(1)){pop($('ht1'),1e9,t)}
+  [$('c1'),$('c2')].forEach((c,i)=>t>=k3+1.2+i*0.5?pop(c,k3+1.2+i*0.5,t):hide(c));
+ }
+ if(sc=='explain'){
+  const a=cur.key;[['cpi','e_cpi'],['ppi','e_ppi'],['fed','e_fed']].forEach(([k,id])=>{const el=$(id),t0=ks(k);if(t<t0){hide(el);return}pop(el,t0,t);if(t-t0>0.35){el.style.transform=`scale(${a==k?1.03:0.96})`};el.style.opacity=a==k?1:.4;el.style.borderColor=a==k?'#F5C542':'rgba(255,255,255,.12)'});
+  t>=ks('fed')?pop($('e_ar'),ks('fed'),t):hide($('e_ar'));
+ }
+ if(sc=='hotcold'){
+  const hot=L.filter(l=>l.scene=='hotcold'&&l.key=='hot'),cold=L.filter(l=>l.scene=='hotcold'&&l.key=='cold');
+  hot.forEach((l,i)=>{const el=$('h'+(i+1));t>=l.start+0.3?pop(el,l.start+0.3,t):hide(el)});
+  cold.forEach((l,i)=>{const el=$('k'+(i+1));t>=l.start+0.3?pop(el,l.start+0.3,t):hide(el)});
+  const ah=cur.key=='hot';$('p_hot').style.opacity=ah?1:.45;$('p_cold').style.opacity=ah?.45:1;
+  $('p_hot').style.borderColor=ah?'#FF3B4E':'rgba(255,255,255,.12)';$('p_cold').style.borderColor=ah?'rgba(255,255,255,.12)':'#4DA3FF';
+ }
+ if(sc=='storyA'){
+  const k5=ks(5),k6=ks(6),k7=ks(7),k8=ks(8);
+  const clk=$('aclock'); if(t<k5){const s=50+Math.floor(cl((t-sStart[sc])/(k5-sStart[sc]))*9.99);clk.textContent='20:29:'+String(s).padStart(2,'0');clk.style.color='#fff';clk.style.borderColor='rgba(255,255,255,.12)'}else{clk.textContent='20:30:00';const f=Math.floor((t-k5)*4)%2;clk.style.color=f?'#fff':'#FF3B4E';clk.style.borderColor='#FF3B4E'}
+  t>=ks(2)?pop($('aticket'),ks(2),t):hide($('aticket'));
+  t>=ks(3)?($('arLot').style.opacity=cl((t-ks(3))/.3),$('arSL').style.opacity=cl((t-ks(3)-0.8)/.3)):($('arLot').style.opacity=0,$('arSL').style.opacity=0);
+  t>=ks(1)?pop($('achart'),ks(1),t):hide($('achart'));
+  // chart
+  const pts=[];const drop=ease((t-k6)/2.2);const jit=t>=k7&&t<k8+1?Math.sin(t*40)*18:0;
+  for(let i=0;i<=45;i++){const x=i*20;let y=170+Math.sin(i*.7+t*.6)*14;if(i>30){y+=drop*(i-30)*14+(i>40?jit:0)}pts.push([x,cl(y,10,320)])}
+  $('aline').setAttribute('d',pathFrom(pts));$('aline').setAttribute('stroke',t>=k6?'#FF3B4E':'#F5C542');$('aentry').setAttribute('y1',170);$('aentry').setAttribute('y2',170);
+  $('aflash').style.opacity=t>=k5?((Math.floor((t-k5)*3)%2)?1:.3):0;
+  $('achart').style.marginLeft=(t>=k7&&t<k8?Math.sin(t*50)*8:0)+'px';
+  const eq=t<k8?100:100-50*ease((t-k8)/1.6);$('aeq').textContent=Math.round(eq)+'%';$('aeq').style.color=eq<100?'#FF3B4E':'#fff';
+  $('aeqb').style.width=eq+'%';$('aeqb').style.background=eq<100?'#FF3B4E':'#22D38A';
+ }
+ if(sc=='storyB'){
+  t>=ks(0)+0.5?pop($('bcal'),ks(0)+0.5,t):hide($('bcal'));
+  t>=ks(1)?pop($('bticket'),ks(1),t):hide($('bticket'));
+  t>=ks(2)?pop($('bwait'),ks(2),t):hide($('bwait'));$('bwb').style.width=(ease((t-ks(2))/3)*100)+'%';
+  t>=ks(3)?pop($('bchart'),ks(3),t):hide($('bchart'));
+  const dr=ease((t-ks(3))/2.5);const pts=[];for(let i=0;i<=45;i++){let y=80+Math.sin(i*.8)*14;if(i>22)y+=(i-22)*5*dr;pts.push([i*20,cl(y,10,240)])}
+  $('bline').setAttribute('d',pathFrom(pts));const sx=27*20;$('bsell').setAttribute('transform',`translate(${sx},${cl(80+5*5*dr,0,240)})`);$('bsell').style.opacity=dr>0.5?1:0;
+ }
+ if(sc=='versus'){pop($('vA'),sStart[sc]+0.2,t);pop($('vB'),sStart[sc]+0.7,t);t>=sStart[sc]+1.2?pop($('vs'),sStart[sc]+1.2,t):hide($('vs'))}
+ if(sc=='lessons'){[1,2,3].forEach(k=>{const el=$('l'+k),t0=ks(k);t>=t0?pop(el,t0,t):hide(el);if(t>=t0+0.35)el.style.opacity=cur.key==k?1:.45})}
+ if(sc=='outro'){
+  pop($('o0'),ks(0),t); t>=ks(1)?pop($('o1'),ks(1),t):hide($('o1')); t>=ks(2)?pop($('o2'),ks(2),t):hide($('o2'));
+  $('ctab').style.transform=`scale(${1+0.05*Math.sin(t*7)})`;
+ }
+}
+window.draw=draw;
+</script></body></html>
