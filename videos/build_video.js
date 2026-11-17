@@ -11,7 +11,7 @@ const VOICES = { male: 'lo-LA-ChanthavongNeural', female: 'lo-LA-KeomanyNeural' 
 const vkey = process.argv[3] || 'male';
 const voice = VOICES[vkey] || vkey;
 const rate = process.env.TTS_RATE || '-4%';
-const tts = process.env.TTS_SCRIPT;
+const tts = process.env.TTS_SCRIPT || path.join(__dirname, 'tts.py');
 const work = path.join(process.env.WORK_DIR || path.join(dir, '.build'), vkey);
 const FPS = 30, W = 1080, H = 1920, PAD = 0.55;
 const scenes = JSON.parse(fs.readFileSync(path.join(dir, 'scenes.json'), 'utf8'));

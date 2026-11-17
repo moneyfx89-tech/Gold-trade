@@ -21,8 +21,8 @@
 - สร้างด้วย `videos/build_video.js` (แนวตั้ง 1080x1920, พากย์ AI ภาษาลาวด้วย edge-tts, ฟอนต์ Noto Sans Lao ใน `videos/fonts/`)
 - สคริปต์ของแต่ละคลิปอยู่ที่ `videos/<ชื่อคลิป>/scenes.json` ฉากที่มีให้ใช้: hook, title, table, formula, example, bars, candles, quote, cta
 - เสียง: `female` (Keomany) ผู้ใช้เลือกใช้เป็นหลัก หรือ `male` (Chanthavong)
-- คำสั่ง: `TTS_SCRIPT=<tts.py> node videos/build_video.js videos/<ชื่อคลิป> female` (ใส่ `PREVIEW=1` เพื่อดูภาพตัวอย่างก่อน)
-- edge-tts ต้องตั้ง SSL context ให้ใช้ `/root/.ccr/ca-bundle.crt` (ตัวอย่าง tts.py: ตั้ง `edge_tts.communicate._SSL_CTX` แล้ว stream เสียงออกเป็นไฟล์)
+- คำสั่ง: `node videos/build_video.js videos/<ชื่อคลิป> female` (ใส่ `PREVIEW=1` เพื่อดูภาพตัวอย่างก่อน)
+- edge-tts ต้องตั้ง SSL context ให้ใช้ `/root/.ccr/ca-bundle.crt` (ทำไว้แล้วใน `videos/tts.py`; ติดตั้งด้วย `pip install edge-tts`)
 - ในช่อง `say` ให้เขียนตัวเลขและศัพท์อังกฤษเป็นคำลาว (ໜຶ່ງພັນ, ລັອດ, ສະຕັອບລອສ) เสียงจะได้อ่านถูก
 
 ## งานที่ยังค้างอยู่
