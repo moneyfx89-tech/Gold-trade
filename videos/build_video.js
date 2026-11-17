@@ -42,7 +42,7 @@ function body(s) {
       ${s.bars.map((b, k) => `<div class="bar a" style="--d:${0.6 + k * 2.6}s"><div class="bl">${esc(b[0])}</div>
         <div class="track"><div class="fill ${k ? 'red' : ''} grow" style="--d:${0.9 + k * 2.6}s;--w:${b[1]}%"></div></div>
         <div class="bv">${b[1] > 50 ? '~' + Math.round(b[1]) : '&lt;35'}%</div></div>`).join('')}`;
-    case 'quote': return `<div class="qm a" style="--d:0s">“</div>${big}<div class="sub gold a" style="--d:1.6s">${esc(s.sub)}</div>`;
+    case 'quote': return `<div class="quote"><div class="qm a" style="--d:0s">“</div>${big}</div><div class="sub gold a" style="--d:1.6s">${esc(s.sub)}</div>`;
     case 'cta': return `<div class="bell a" style="--d:0s">🔔</div>${big}${sub}`;
     default: return big + sub;
   }
@@ -60,12 +60,15 @@ const candles = (() => { // พื้นหลังแท่งเทียน�
   return `<svg width="1120" height="1920" viewBox="0 0 1120 1920">${out}</svg>`;
 })();
 
+const fdir = path.join(__dirname, 'fonts');
+const face = (fam, file, w) => `@font-face{font-family:'${fam}';font-weight:${w};src:url(data:font/ttf;base64,${fs.readFileSync(path.join(fdir, file)).toString('base64')})}`;
+const fontFaces = [400, 600, 800].map(w => face('Noto Sans Lao', `NotoSansLao-${w}.ttf`, w)).join('')
+  + [600, 800].map(w => face('NS', `NotoSans-${w}.ttf`, w)).join('') + face('NS', 'NotoSans-600.ttf', 400);
 const html = `<!doctype html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;600;800&display=block" rel="stylesheet">
-<style>
+<style>${fontFaces}
 :root{--gold:#f2c14e;--ink:#f5f1e6;--bg1:#0b1530;--bg2:#050a18}
 *{margin:0;box-sizing:border-box}
-body{width:${W}px;height:${H}px;overflow:hidden;font-family:'Noto Sans Lao',sans-serif;color:var(--ink);
+body{width:${W}px;height:${H}px;overflow:hidden;font-family:'NS','Noto Sans Lao',sans-serif;color:var(--ink);
  background:radial-gradient(1200px 900px at 50% 30%,#16244d,var(--bg1) 55%,var(--bg2))}
 .bgc{position:absolute;left:-20px;top:0;opacity:.07;animation:pan 60s linear both}
 @keyframes pan{to{transform:translateX(-160px)}}
@@ -84,7 +87,9 @@ body{width:${W}px;height:${H}px;overflow:hidden;font-family:'Noto Sans Lao',sans
 .tr b{color:var(--gold)} .th{grid-template-columns:1fr 1fr;font-size:46px;font-weight:600;opacity:.7}
 .card{background:rgba(242,193,78,.1);border:3px solid var(--gold);border-radius:40px;padding:60px 50px;margin-top:40px;width:100%}
 .card .big{font-size:110px;color:var(--gold)}
-.mid{font-size:76px;font-weight:800;color:var(--gold);line-height:1.35}
+.card .sub{font-size:54px;white-space:nowrap}
+.quote .big{font-size:104px}
+.mid{font-size:66px;font-weight:800;color:var(--gold);line-height:1.35}
 .line{font-size:72px;font-weight:600;margin:16px 0}
 .bar{width:100%;margin:40px 0;text-align:left}
 .bl{font-size:54px;font-weight:600;margin-bottom:18px}
@@ -113,9 +118,9 @@ body{width:${W}px;height:${H}px;overflow:hidden;font-family:'Noto Sans Lao',sans
 (async () => {
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: W, height: H } });
-  await p.setContent(html, { waitUntil: 'networkidle' });
-  await p.evaluate(() => document.fonts.ready);
-  if (!(await p.evaluate(() => document.fonts.check('800 100px "Noto Sans Lao"')))) throw new Error('Lao font did not load');
+  await p.setContent(html);
+  const ok = await p.evaluate(async () => (await document.fonts.load('800 100px "Noto Sans Lao"', 'ກຳໄລ')).length > 0);
+  if (!ok) throw new Error('Lao font did not load');
 
   const frames = path.join(work, 'frames.mjpeg');
   const fd = fs.openSync(frames, 'w');
@@ -128,6 +133,12 @@ body{width:${W}px;height:${H}px;overflow:hidden;font-family:'Noto Sans Lao',sans
     }, [body(s), s.cap || '']);
     await p.evaluate(l => { window.__len = l; }, s.len);
     const nf = Math.round(s.len * FPS);
+    if (process.env.PREVIEW) { // ภาพตัวอย่าง 1 ภาพต่อฉาก (ก่อนจบฉาก 0.5 วินาที)
+      const t = s.len - 0.5;
+      await p.evaluate(t => { for (const a of document.getAnimations()) { a.pause(); a.currentTime = t * 1000; } }, t);
+      await p.screenshot({ path: path.join(work, `preview${scenes.indexOf(s)}.png`) });
+      continue;
+    }
     for (let f = 0; f < nf; f++) {
       const t = f / FPS, g = t0 + t;
       await p.evaluate(([t, g, total]) => {
@@ -147,6 +158,7 @@ body{width:${W}px;height:${H}px;overflow:hidden;font-family:'Noto Sans Lao',sans
   }
   fs.closeSync(fd);
   await b.close();
+  if (process.env.PREVIEW) return;
 
   // 2) รวมเสียง: แต่ละฉากเติมความเงียบให้ยาวเท่าฉาก
   const list = path.join(work, 'alist.txt');
