@@ -7,10 +7,12 @@ const fs = require('fs');
 const path = require('path');
 
 const dir = path.resolve(process.argv[2]);
-const voice = process.argv[3] || 'lo-LA-ChanthavongNeural';
+const VOICES = { male: 'lo-LA-ChanthavongNeural', female: 'lo-LA-KeomanyNeural' };
+const vkey = process.argv[3] || 'male';
+const voice = VOICES[vkey] || vkey;
 const rate = process.env.TTS_RATE || '-4%';
 const tts = process.env.TTS_SCRIPT;
-const work = process.env.WORK_DIR || path.join(dir, '.build');
+const work = path.join(process.env.WORK_DIR || path.join(dir, '.build'), vkey);
 const FPS = 30, W = 1080, H = 1920, PAD = 0.55;
 const scenes = JSON.parse(fs.readFileSync(path.join(dir, 'scenes.json'), 'utf8'));
 fs.mkdirSync(work, { recursive: true });
@@ -31,7 +33,7 @@ function body(s) {
   const big = s.big ? `<div class="big a" style="--d:.05s">${esc(s.big)}</div>` : '';
   const sub = s.sub ? `<div class="sub a" style="--d:.45s">${esc(s.sub)}</div>` : '';
   switch (s.kind) {
-    case 'hook': return `<div class="tag a" style="--d:0s">ກົດບໍລິຫານຄວາມສ່ຽງ</div>${big}${sub}`;
+    case 'hook': return `${s.tag ? `<div class="tag a" style="--d:0s">${esc(s.tag)}</div>` : ''}${big}${sub}`;
     case 'table': return `<div class="tbl">
       <div class="tr th a" style="--d:0s"><span>${esc(s.head[0])}</span><span>${esc(s.head[1])}</span></div>
       ${s.rows.map((r, k) => `<div class="tr a" style="--d:${0.5 + k * 1.6}s"><span>${esc(r[0])}</span><b>→</b><span class="gold">${esc(r[1])}</span></div>`).join('')}</div>`;
@@ -41,11 +43,23 @@ function body(s) {
     case 'bars': return `<div class="sub a" style="--d:0s;margin-bottom:70px">${esc(s.title)}</div>
       ${s.bars.map((b, k) => `<div class="bar a" style="--d:${0.6 + k * 2.6}s"><div class="bl">${esc(b[0])}</div>
         <div class="track"><div class="fill ${k ? 'red' : ''} grow" style="--d:${0.9 + k * 2.6}s;--w:${b[1]}%"></div></div>
-        <div class="bv">${b[1] > 50 ? '~' + Math.round(b[1]) : '&lt;35'}%</div></div>`).join('')}`;
+        <div class="bv">${esc(b[2])}</div></div>`).join('')}`;
+    case 'candles': return `${s.title ? `<div class="sub a" style="--d:0s;margin:0 0 40px">${esc(s.title)}</div>` : ''}
+      <div class="cdl">${s.items.map((c, k) => candle(c, (s.title ? 0.5 : 0) + k * (s.step || 1.2))).join('')}</div>`;
     case 'quote': return `<div class="quote"><div class="qm a" style="--d:0s">“</div>${big}</div><div class="sub gold a" style="--d:1.6s">${esc(s.sub)}</div>`;
     case 'cta': return `<div class="bell a" style="--d:0s">🔔</div>${big}${sub}`;
     default: return big + sub;
   }
+}
+
+// แท่งเทียน 1 แท่ง: c = {o,c,h,l} ในสเกล 0-100 (0 = ล่าง), label, note
+function candle(c, d) {
+  const Hc = 620, y = v => Hc - v / 100 * Hc, up = c.c >= c.o, col = up ? '#3ccf91' : '#e5534b';
+  const top = y(Math.max(c.o, c.c)), bh = Math.max(8, Math.abs(c.c - c.o) / 100 * Hc), w = c.w || 120;
+  return `<div class="cd a" style="--d:${d}s"><svg width="${w + 40}" height="${Hc}" viewBox="0 0 ${w + 40} ${Hc}">
+    <line x1="${w / 2 + 20}" x2="${w / 2 + 20}" y1="${y(c.h)}" y2="${y(c.l)}" stroke="${col}" stroke-width="8" stroke-linecap="round"/>
+    <rect x="20" y="${top}" width="${w}" height="${bh}" rx="8" fill="${col}"/></svg>
+    ${c.label ? `<div class="cl">${esc(c.label)}</div>` : ''}${c.note ? `<div class="cn" style="color:${col}">${esc(c.note)}</div>` : ''}</div>`;
 }
 
 const candles = (() => { // พื้นหลังแท่งเทียนจาง ๆ
@@ -99,6 +113,10 @@ body{width:${W}px;height:${H}px;overflow:hidden;font-family:'NS','Noto Sans Lao'
 .grow{animation:grow 1.4s cubic-bezier(.2,.8,.2,1) var(--d) both}
 @keyframes grow{from{width:0}to{width:var(--w)}}
 .bv{font-size:96px;font-weight:800;margin-top:10px}
+.cdl{display:flex;justify-content:center;align-items:flex-end;gap:30px;width:100%}
+.cd{display:flex;flex-direction:column;align-items:center}
+.cl{font-size:46px;font-weight:600;margin-top:24px;white-space:nowrap}
+.cn{font-size:44px;font-weight:800;margin-top:8px;white-space:nowrap}
 .qm{font-size:260px;line-height:.6;color:var(--gold);height:150px}
 .bell{font-size:170px;animation-name:pop}
 @keyframes pop{0%{opacity:0;transform:scale(.3) rotate(-20deg)}70%{transform:scale(1.15) rotate(8deg)}100%{opacity:1;transform:none}}
@@ -166,7 +184,7 @@ body{width:${W}px;height:${H}px;overflow:hidden;font-family:'NS','Noto Sans Lao'
   fs.writeFileSync(list, scenes.map((_, i) => `file 'p${i}.wav'`).join('\n'));
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'concat', '-safe', '0', '-i', list, path.join(work, 'voice.wav')]);
 
-  const out = path.join(dir, path.basename(dir) + '.mp4');
+  const out = path.join(dir, `${path.basename(dir)}-${vkey}.mp4`);
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'mjpeg', '-framerate', String(FPS), '-i', frames, '-i', path.join(work, 'voice.wav'),
     '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11', '-c:v', 'libx264', '-preset', 'medium', '-crf', '20', '-pix_fmt', 'yuv420p',
     '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', out]);
