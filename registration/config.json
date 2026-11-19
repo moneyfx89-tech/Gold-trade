@@ -1,0 +1,57 @@
+{
+  "brand": {
+    "name": "GOLD TRADE",
+    "accent": "ACADEMY",
+    "tagline": "TRADING ACADEMY • FOREX & GOLD",
+    "homeUrl": ""
+  },
+  "hero": {
+    "kicker": "Gold Trade Academy",
+    "title": "ลงทะเบียนฟรี",
+    "highlight": "เริ่มต้นเป็นเทรดเดอร์อย่างมีระบบ",
+    "intro": "กรอกข้อมูลติดต่อของคุณ เพื่อให้ทีมงานติดต่อกลับได้สะดวก",
+    "purpose": "ลงทะเบียนเพื่อสำรองที่นั่งคลาสเรียนเทรด Forex & ทองคำ และรับข้อมูลเพิ่มเติมจากทีมงาน · ใช้เวลาเพียง 1 นาที"
+  },
+  "course": {
+    "visible": true,
+    "badge": "เรียนกับโค้ชเทรดเดอร์ตัวจริง",
+    "title": "คอร์สเทรด Forex & ทองคำ",
+    "subtitle": "ตั้งแต่พื้นฐาน 101 จนถึงระดับมืออาชีพ",
+    "levels": [
+      { "level": "Level 1", "title": "Forex 101 · เริ่มจากศูนย์", "topics": "กราฟแท่งเทียน · Lot & Pip · บริหารเงินทุน · เปิดบัญชีและใช้ MT5" },
+      { "level": "Level 2", "title": "Price Action & แนวรับแนวต้าน", "topics": "โครงสร้างตลาด · จุดเข้า-ออก · ตั้ง SL/TP · เทรดข่าว" },
+      { "level": "Level 3", "title": "ระบบเทรดทองคำ XAUUSD", "topics": "แผนเทรดรายวัน · จดบันทึกเทรด · จิตวิทยาการเทรด" }
+    ]
+  },
+  "classes": {
+    "visible": true,
+    "required": true,
+    "title": "คลาสที่คุณต้องการเรียน",
+    "options": [
+      { "id": "c101", "label": "คลาส 101 · เริ่มต้นจากศูนย์", "dates": ["เสาร์ 5 ธ.ค. 2026 · 10:00-17:00 · กรุงเทพฯ", "อาทิตย์ 13 ธ.ค. 2026 · ออนไลน์ (Zoom)"] },
+      { "id": "pa", "label": "Price Action ขั้นกลาง", "dates": ["เสาร์ 19 ธ.ค. 2026 · 10:00-17:00 · กรุงเทพฯ"] },
+      { "id": "gold", "label": "ระบบเทรดทองคำ (ขั้นสูง)", "dates": [] }
+    ]
+  },
+  "questions": [
+    { "id": "hasTraded", "title": "คุณเคยเทรดมาก่อนหรือไม่?", "multi": false, "required": true,
+      "options": [ { "value": "no", "label": "ไม่เคย" }, { "value": "lt1", "label": "เคย น้อยกว่า 1 ปี" }, { "value": "gt1", "label": "เคย มากกว่า 1 ปี" } ] },
+    { "id": "interest", "title": "สนใจเทรดอะไร? (เลือกได้หลายข้อ)", "multi": true, "required": false,
+      "options": [ { "value": "gold", "label": "ทองคำ XAUUSD" }, { "value": "forex", "label": "ค่าเงิน Forex" }, { "value": "crypto", "label": "คริปโต" }, { "value": "index", "label": "ดัชนี / หุ้น" } ] },
+    { "id": "channel", "title": "รู้จักเราจากช่องทางไหน?", "multi": false, "required": false,
+      "options": [ { "value": "facebook", "label": "Facebook" }, { "value": "tiktok", "label": "TikTok" }, { "value": "youtube", "label": "YouTube" }, { "value": "friend", "label": "เพื่อนแนะนำ" }, { "value": "other", "label": "อื่น ๆ" } ] }
+  ],
+  "contact": {
+    "line": "https://line.me/R/ti/p/@yourline",
+    "whatsapp": "",
+    "messenger": ""
+  },
+  "success": {
+    "title": "ลงทะเบียนสำเร็จ!",
+    "text": "ทีมงานจะติดต่อกลับภายใน 24 ชั่วโมง ระหว่างนี้เข้ากลุ่มนักเรียนได้เลย",
+    "groupLabel": "เข้ากลุ่ม LINE นักเรียน",
+    "groupUrl": "https://line.me/R/ti/g/yourgroup"
+  },
+  "phone": { "countryCode": "+66", "flag": "🇹🇭", "placeholder": "081 234 5678" },
+  "disclaimer": "เว็บไซต์นี้เป็นแพลตฟอร์มการศึกษาด้านการเทรด Forex, CFD และทองคำมีความเสี่ยงสูง การเรียนรู้ไม่ใช่การรับประกันผลกำไร"
+}

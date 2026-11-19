@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>รายชื่อผู้ลงทะเบียน</title>
+<link rel="icon" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f3ee;--panel:#fff;--ink:#15171c;--muted:#5d6370;--line:#e6e1d6;--gold:#c9972b;--dark:#0f1218}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Noto Sans Thai",system-ui,sans-serif}
+header{background:var(--dark);color:#fff;padding:14px 16px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header h1{font-size:18px;margin:0}
+main{max-width:1280px;margin:0 auto;padding:16px}
+.login{max-width:360px;margin:12vh auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px}
+input,select,button{font:inherit}
+input[type=password],input[type=search]{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px}
+button,.btn{background:var(--gold);color:#1a1405;border:0;border-radius:10px;padding:9px 16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
+.stat b{display:block;font-size:26px}
+.stat span{color:var(--muted);font-size:13px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.bar input{flex:1;min-width:200px}
+.wrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:900px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}
+th{background:#faf8f3;font-weight:600;white-space:nowrap}
+td small{color:var(--muted)}
+select{padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.src{font-size:13px;color:var(--muted)}
+a.tel{color:inherit;font-weight:600}
+</style>
+</head>
+<body>
+<header><h1>📋 รายชื่อผู้ลงทะเบียนเรียนเทรด</h1><div id="actions" hidden><a class="btn" id="csv" href="#">ดาวน์โหลด CSV</a> <button id="logout" type="button" style="background:#ffffff1a;color:#fff">ออกจากระบบ</button></div></header>
+
+<form class="login" id="login" hidden>
+  <h2 style="margin-top:0">เข้าสู่ระบบแอดมิน</h2>
+  <input type="password" id="token" placeholder="รหัสแอดมิน (REG_ADMIN_TOKEN)" required>
+  <p id="loginErr" style="color:#c0392b;font-size:14px"></p>
+  <button type="submit">เข้าสู่ระบบ</button>
+</form>
+
+<main id="app" hidden>
+  <div class="stats" id="stats"></div>
+  <div class="bar"><input type="search" id="q" placeholder="ค้นหาชื่อ / เบอร์ / LINE / คลาส"></div>
+  <div class="wrap"><table>
+    <thead><tr><th>#</th><th>วันที่</th><th>ชื่อ</th><th>ติดต่อ</th><th>คลาส / วันเรียน</th><th>คำตอบ</th><th>ที่มา</th><th>สถานะ</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table></div>
+  <h3>ผู้เข้าชมแยกตามแหล่งที่มา (?src=)</h3>
+  <div class="wrap"><table style="min-width:0"><thead><tr><th>แหล่งที่มา</th><th>ผู้เข้าชม</th><th>ลงทะเบียน</th></tr></thead><tbody id="srcRows"></tbody></table></div>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, props = {}, ...kids) => { const n = Object.assign(document.createElement(tag), props); kids.forEach(k => n.append(k)); return n; };
+  const STATUS = {new: "ใหม่", contacted: "ติดต่อแล้ว", paid: "ชำระแล้ว", cancelled: "ยกเลิก"};
+  let token = ""; try { token = sessionStorage.getItem("reg_admin") || ""; } catch {}
+  let data = null;
+
+  async function api(path, opts = {}) {
+    const r = await fetch(path, {...opts, headers: {...(opts.headers || {}), Authorization: "Bearer " + token, "Content-Type": "application/json"}});
+    if (r.status === 401) throw new Error("unauthorized");
+    return r.json();
+  }
+
+  function render() {
+    const term = $("q").value.trim().toLowerCase();
+    const regs = data.registrations;
+    const today = new Date().toLocaleDateString("sv-SE", {timeZone: "Asia/Bangkok"});
+    const count = (s) => regs.filter(r => r.status === s).length;
+    $("stats").replaceChildren(...[
+      [regs.length, "ผู้ลงทะเบียนทั้งหมด"],
+      [regs.filter(r => r.created_at.startsWith(today)).length, "ลงทะเบียนวันนี้"],
+      [count("new"), "รอติดต่อ"],
+      [count("paid"), "ชำระแล้ว"],
+      [data.visits, "ผู้เข้าชมหน้าฟอร์ม"],
+      [data.visits ? (regs.length / data.visits * 100).toFixed(1) + "%" : "-", "อัตราการลงทะเบียน"],
+    ].map(([v, l]) => el("div", {className: "stat"}, el("b", {textContent: v}), el("span", {textContent: l}))));
+
+    const shown = regs.filter(r => !term || [r.first_name, r.last_name, r.phone, r.line_id, r.email, r.class_label, r.class_date, r.src]
+      .join(" ").toLowerCase().includes(term));
+    $("rows").replaceChildren(...shown.map(r => {
+      const answers = JSON.parse(r.answers || "{}");
+      const sel = el("select");
+      Object.entries(STATUS).forEach(([k, v]) => sel.append(el("option", {value: k, textContent: v, selected: r.status === k})));
+      sel.addEventListener("change", async () => { await api("/api/admin/status", {method: "POST", body: JSON.stringify({id: r.id, status: sel.value})}); r.status = sel.value; render(); });
+      return el("tr", {},
+        el("td", {textContent: r.id}),
+        el("td", {}, el("small", {textContent: r.created_at.replace("T", " ").slice(0, 16)})),
+        el("td", {}, el("b", {textContent: `${r.first_name} ${r.last_name}`}), ...(r.note ? [el("br"), el("small", {textContent: "📝 " + r.note})] : [])),
+        el("td", {}, el("a", {className: "tel", href: "tel:" + r.phone, textContent: r.phone}),
+          ...(r.line_id ? [el("br"), el("small", {textContent: "LINE: " + r.line_id})] : []),
+          ...(r.email ? [el("br"), el("small", {textContent: r.email})] : [])),
+        el("td", {}, r.class_label || "-", ...(r.class_date ? [el("br"), el("small", {textContent: r.class_date})] : [])),
+        el("td", {}, ...Object.entries(answers).flatMap(([k, v], i) => [...(i ? [el("br")] : []), el("small", {textContent: `${k} ${v}`})])),
+        el("td", {className: "src", textContent: r.src || "-"}),
+        el("td", {}, sel));
+    }));
+
+    const regBySrc = {};
+    regs.forEach(r => { const s = r.src || "(direct)"; regBySrc[s] = (regBySrc[s] || 0) + 1; });
+    const srcs = new Map(data.visitsBySrc.map(v => [v.src, v.visits]));
+    Object.keys(regBySrc).forEach(s => srcs.has(s) || srcs.set(s, 0));
+    $("srcRows").replaceChildren(...[...srcs].map(([s, v]) => el("tr", {}, el("td", {textContent: s}), el("td", {textContent: v}), el("td", {textContent: regBySrc[s] || 0}))));
+  }
+
+  async function load() {
+    try {
+      data = await api("/api/admin/registrations");
+    } catch {
+      token = ""; try { sessionStorage.removeItem("reg_admin"); } catch {}
+      $("app").hidden = true; $("actions").hidden = true; $("login").hidden = false;
+      return false;
+    }
+    $("login").hidden = true; $("app").hidden = false; $("actions").hidden = false;
+    $("csv").href = "/api/admin/export.csv?token=" + encodeURIComponent(token);
+    render();
+    return true;
+  }
+
+  $("login").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    token = $("token").value;
+    if (await load()) { try { sessionStorage.setItem("reg_admin", token); } catch {} }
+    else $("loginErr").textContent = "รหัสไม่ถูกต้อง (หรือยังไม่ได้ตั้ง REG_ADMIN_TOKEN)";
+  });
+  $("logout").addEventListener("click", () => { try { sessionStorage.removeItem("reg_admin"); } catch {} location.reload(); });
+  $("q").addEventListener("input", () => data && render());
+  if (token) load(); else $("login").hidden = false;
+  setInterval(() => token && !$("app").hidden && load(), 60000);
+})();
+</script>
+</body>
+</html>

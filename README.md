@@ -161,3 +161,6 @@ Discord ไม่มีภาษาลาวในตัวเลือกภา
 - ไฟล์ Docker ติดตั้งฟอนต์ไทย (`fonts-thai-tlwg`) และฟอนต์ลาว (`fonts-lao`) ให้แล้ว
   ถ้ารันเองบน Linux: `sudo apt install fonts-thai-tlwg fonts-lao`
 - เวลาในข้อความเป็น UTC+7 ซึ่งตรงกันทั้งไทยและลาว
+
+## 📝 เว็บลงทะเบียนเรียนเทรด
+มีฟอร์มลงทะเบียนเรียนเทรด Forex & ทองคำ พร้อมหน้าแอดมิน อยู่ในโฟลเดอร์ `registration/` ดูวิธีใช้ได้ที่ [registration/README.md](registration/README.md)

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ลงทะเบียนเรียนเทรด</title>
+<meta name="description" content="ลงทะเบียนฟรี เรียนเทรด Forex & ทองคำ ทีมงานจะติดต่อกลับเพื่อให้ข้อมูลเพิ่มเติม">
+<meta property="og:title" content="ลงทะเบียนเรียนเทรด Forex & ทองคำ">
+<meta property="og:description" content="ลงทะเบียนฟรี ใช้เวลาเพียง 1 นาที">
+<meta property="og:locale" content="th_TH">
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3ee; --panel:#fff; --ink:#15171c; --muted:#5d6370; --dim:#8a909b; --line:#e6e1d6;
+  --gold:#c9972b; --gold-2:#e8bf5a; --gold-ink:#7a5a12; --dark:#0f1218; --dark-2:#181c25;
+  --red:#c0392b; --ok:#1e8e5a;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.num{font-family:Rajdhani,"Noto Sans Thai",sans-serif;letter-spacing:.02em}
+
+/* header */
+.hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px clamp(16px,4vw,48px);background:var(--dark);color:#fff;position:sticky;top:0;z-index:5;border-bottom:1px solid #ffffff14}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 20px/1 Rajdhani,sans-serif;letter-spacing:.06em}
+.brand b{color:var(--gold-2)}
+.logo{width:34px;height:34px;flex:none}
+.pill{font-size:14px;font-weight:600;padding:8px 16px;border-radius:99px;background:var(--gold);color:#1a1405;text-decoration:none;white-space:nowrap}
+
+/* layout */
+.layout{max-width:1180px;margin:0 auto;padding:clamp(16px,4vw,40px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(20px,3vw,36px);align-items:start}
+@media (max-width:880px){.layout{grid-template-columns:1fr}}
+
+/* aside */
+aside{background:radial-gradient(120% 80% at 0% 0%,#2a2210 0%,var(--dark) 55%) ,var(--dark);color:#e9e6df;border-radius:22px;padding:clamp(22px,4vw,40px);position:sticky;top:84px;overflow:hidden}
+@media (max-width:880px){aside{position:static}}
+.kicker{display:inline-block;font-size:13px;font-weight:600;color:var(--gold-2);border:1px solid #e8bf5a55;border-radius:99px;padding:4px 12px}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.15;margin:16px 0 10px;color:#fff;font-weight:800}
+h1 em{display:block;font-style:normal;background:linear-gradient(90deg,var(--gold-2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;font-size:.6em;line-height:1.35;margin-top:6px}
+.intro{color:#cfcabe;margin:0 0 6px}
+.purpose{color:#9d988c;font-size:14px;margin:0}
+.chart{color:var(--gold);margin:22px 0 6px;opacity:.9}
+.chart svg{width:100%;height:auto;display:block}
+.steps{display:grid;gap:10px;margin-top:18px}
+.steps div{display:flex;gap:14px;align-items:center;background:#ffffff08;border:1px solid #ffffff12;border-radius:14px;padding:12px 14px}
+.steps b{font:700 22px/1 Rajdhani,sans-serif;color:var(--gold-2);min-width:30px}
+.steps span{font-weight:600;color:#fff}
+.steps small{display:block;font-weight:400;color:#9d988c;font-size:13px}
+
+/* course card */
+.course{margin-top:22px;border-top:1px solid #ffffff14;padding-top:20px}
+.badge{display:inline-block;font-size:12px;font-weight:700;background:var(--gold);color:#1a1405;border-radius:6px;padding:3px 9px}
+.course h3{margin:10px 0 2px;color:#fff;font-size:20px;white-space:pre-line}
+.course .sub{color:#9d988c;font-size:14px;margin:0 0 12px}
+.lv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:10px 0;border-bottom:1px dashed #ffffff14}
+.lv:last-child{border-bottom:0}
+.lv .num{color:var(--gold-2);font-weight:700;font-size:14px;grid-row:span 2;padding-top:2px}
+.lv b{color:#fff;font-size:15px}
+.lv small{color:#9d988c;font-size:13px}
+
+/* form card */
+article{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(20px,4vw,40px);box-shadow:0 20px 50px -30px #3a2a0040}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--gold-ink);background:#f6ecd4;border-radius:99px;padding:4px 12px}
+h2{font-size:clamp(26px,3.4vw,34px);margin:10px 0 2px}
+.form-head p{color:var(--muted);margin:0 0 8px;font-size:15px}
+i.req{color:var(--red);font-style:normal}
+.section-title{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.section-title span{font:700 14px/1 Rajdhani,sans-serif;background:var(--dark);color:var(--gold-2);border-radius:8px;padding:6px 8px}
+label.f{display:block;font-weight:600;font-size:15px;margin-bottom:14px}
+label.f small{font-weight:400;color:var(--dim);font-size:13px;margin-left:4px}
+input[type=text],input[type=tel],input[type=email],textarea,select{width:100%;margin-top:6px;font:inherit;font-weight:400;color:var(--ink);background:#fbfaf7;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;outline:none;transition:border-color .15s,box-shadow .15s}
+textarea{min-height:84px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 4px #c9972b22;background:#fff}
+input:user-invalid{border-color:var(--red)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media (max-width:520px){.two{grid-template-columns:1fr}}
+.phone{display:flex;margin-top:6px}
+.phone .cc{display:flex;align-items:center;gap:6px;padding:0 12px;border:1.5px solid var(--line);border-right:0;border-radius:12px 0 0 12px;background:#f1ede4;font-weight:600;white-space:nowrap}
+.phone input{margin-top:0;border-radius:0 12px 12px 0}
+.help{display:block;font-weight:400;font-size:13px;color:var(--dim);margin-top:4px}
+
+/* choices */
+.q{margin-bottom:18px}
+.q-title{font-weight:600;font-size:15px;margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.opt span{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fbfaf7;font-size:15px;cursor:pointer;transition:all .15s}
+.opt input:checked+span{border-color:var(--gold);background:#fbf3df;color:var(--gold-ink);font-weight:600}
+.opt input:focus-visible+span{box-shadow:0 0 0 4px #c9972b33}
+.opts.block{display:grid;gap:8px}
+.opts.block .opt span{display:flex;width:100%;padding:12px 14px}
+.opt span::before{content:"";width:16px;height:16px;flex:none;border:2px solid #c9c2b1;border-radius:50%;transition:all .15s}
+.opt input[type=checkbox]+span::before{border-radius:5px}
+.opt input:checked+span::before{border-color:var(--gold);background:var(--gold);box-shadow:inset 0 0 0 3px #fbf3df}
+.dates{margin:10px 0 0 4px;padding-left:14px;border-left:2px solid #f0e2bd}
+.dates .q-title{font-size:14px;color:var(--muted)}
+
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted);margin:22px 0 4px;cursor:pointer}
+.consent input{width:18px;height:18px;margin-top:3px;accent-color:var(--gold);flex:none}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+button.submit{width:100%;margin-top:18px;display:flex;align-items:center;justify-content:center;gap:10px;font:700 18px/1 "Noto Sans Thai",sans-serif;color:#1a1405;background:linear-gradient(180deg,var(--gold-2),var(--gold));border:0;border-radius:14px;padding:17px;cursor:pointer;box-shadow:0 10px 24px -10px #c9972b;transition:transform .1s,filter .15s}
+button.submit:hover{filter:brightness(1.05)}
+button.submit:active{transform:translateY(1px)}
+button.submit:disabled{opacity:.6;cursor:wait}
+.err{display:none;background:#fdecea;color:var(--red);border:1px solid #f5c6c0;border-radius:12px;padding:10px 14px;margin-top:14px;font-size:14px}
+.err.show{display:block}
+.foot-note{text-align:center;color:var(--dim);font-size:13px;margin:10px 0 0}
+.loading{color:var(--dim);font-size:14px}
+
+/* footer */
+footer{max-width:1180px;margin:0 auto;padding:10px clamp(16px,4vw,40px) 40px;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center;justify-content:space-between}
+footer .fb{display:flex;align-items:center;gap:10px}
+footer .fb b{display:block;color:var(--ink);font:700 15px/1.1 Rajdhani,sans-serif;letter-spacing:.06em}
+footer .fb span{font:600 11px/1.2 Rajdhani,sans-serif;letter-spacing:.08em;color:var(--dim)}
+footer p{margin:0;max-width:560px}
+
+/* success modal */
+.modal{position:fixed;inset:0;background:#0f1218cc;backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal.show{display:flex}
+.modal-box{background:#fff;border-radius:22px;max-width:440px;width:100%;padding:32px 26px;text-align:center;animation:pop .25s ease-out}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.check{width:72px;height:72px;border-radius:50%;background:#e7f6ee;color:var(--ok);display:grid;place-items:center;margin:0 auto 12px}
+.modal-box h3{margin:0 0 6px;font-size:24px}
+.modal-box p{color:var(--muted);margin:0 0 16px}
+.summary{text-align:left;background:#faf8f3;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;margin-bottom:16px}
+.summary div{display:flex;justify-content:space-between;gap:12px;padding:3px 0}
+.summary div span:first-child{color:var(--dim)}
+.summary div span:last-child{font-weight:600;text-align:right}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:12px;font-weight:700;text-decoration:none;border:0;cursor:pointer;font:inherit;font-weight:700;margin-top:8px}
+.btn.line{background:#06c755;color:#fff}
+.btn.wa{background:#25d366;color:#fff}
+.btn.ms{background:#0866ff;color:#fff}
+.btn.ghost{background:#f1ede4;color:var(--ink)}
+</style>
+</head>
+<body>
+<header class="hd">
+  <a class="brand" id="brandLink" href="#">
+    <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#c9972b"/><path d="M8 28l8-8 5 4 11-12" stroke="#0f1218" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span id="brandName">GOLD <b>TRADE</b></span>
+  </a>
+  <a class="pill" href="#form">ลงทะเบียนออนไลน์</a>
+</header>
+
+<section class="layout">
+  <aside>
+    <span class="kicker" id="kicker">&nbsp;</span>
+    <h1><span id="heroTitle">ลงทะเบียนฟรี</span><em id="heroHighlight"></em></h1>
+    <p class="intro" id="heroIntro"></p>
+    <p class="purpose" id="heroPurpose"></p>
+    <div class="chart" aria-hidden="true">
+      <svg viewBox="0 0 420 150" fill="none">
+        <path d="M8 1H412M8 75H412M8 149H412" stroke="currentColor" stroke-opacity=".12"/>
+        <g stroke="currentColor" stroke-width="2" stroke-opacity=".55">
+          <path d="M40 110V136M90 82V120M140 96V128M190 60V100M240 70V104M290 34V76M340 44V80M390 10V48"/>
+        </g>
+        <g fill="currentColor" fill-opacity=".55">
+          <rect x="34" y="116" width="12" height="14" rx="2"/><rect x="84" y="88" width="12" height="24" rx="2"/><rect x="134" y="102" width="12" height="16" rx="2"/><rect x="184" y="66" width="12" height="26" rx="2"/><rect x="234" y="76" width="12" height="18" rx="2"/><rect x="284" y="40" width="12" height="28" rx="2"/><rect x="334" y="50" width="12" height="20" rx="2"/><rect x="384" y="16" width="12" height="24" rx="2"/>
+        </g>
+        <path d="M8 130L90 98L140 112L190 78L240 88L290 50L340 60L412 18" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="steps">
+      <div><b>01</b><span>ข้อมูลส่วนตัว<small>ชื่อและนามสกุลของคุณ</small></span></div>
+      <div><b>02</b><span>ช่องทางติดต่อ<small>เบอร์โทรและช่องทางที่สะดวก</small></span></div>
+      <div><b>03</b><span>เลือกคลาสเรียน<small>เลือกคลาสและวันที่สะดวก แล้วกดลงทะเบียน</small></span></div>
+    </div>
+    <div class="course" id="course" hidden></div>
+  </aside>
+
+  <article id="form">
+    <div class="form-head">
+      <span class="tag">แบบฟอร์มลงทะเบียน</span>
+      <h2>ลงทะเบียนเรียนเทรด</h2>
+      <p>กรุณากรอกข้อมูลให้ครบถ้วน <i class="req">*</i> จำเป็นต้องกรอก</p>
+    </div>
+    <form id="regForm" novalidate>
+      <div class="section-title"><span>01</span> ข้อมูลส่วนตัว</div>
+      <div class="two">
+        <label class="f">ชื่อ <i class="req">*</i>
+          <input type="text" name="firstName" autocomplete="given-name" placeholder="กรอกชื่อ" required maxlength="100">
+        </label>
+        <label class="f">นามสกุล <i class="req">*</i>
+          <input type="text" name="lastName" autocomplete="family-name" placeholder="กรอกนามสกุล" required maxlength="100">
+        </label>
+      </div>
+
+      <div class="section-title"><span>02</span> ช่องทางติดต่อ</div>
+      <label class="f">เบอร์โทรศัพท์ <i class="req">*</i>
+        <div class="phone">
+          <span class="cc" id="cc">🇹🇭 +66</span>
+          <input type="tel" name="phone" inputmode="tel" autocomplete="tel-national" placeholder="081 234 5678" required maxlength="20">
+        </div>
+        <span class="help">ใช้สำหรับโทรติดต่อกลับ · ขึ้นต้นด้วย 06, 08 หรือ 09</span>
+      </label>
+      <div class="two">
+        <label class="f">LINE ID <small>ไม่บังคับ</small>
+          <input type="text" name="lineId" placeholder="กรอก LINE ID" maxlength="100">
+        </label>
+        <label class="f">อีเมล <small>ไม่บังคับ</small>
+          <input type="email" name="email" autocomplete="email" placeholder="name@example.com" maxlength="254">
+        </label>
+      </div>
+
+      <section id="classSec" hidden>
+        <div class="section-title"><span>03</span> <span style="all:unset" id="classTitle">คลาสและวันเรียน</span></div>
+        <div id="classBox"></div>
+      </section>
+
+      <section>
+        <div class="section-title"><span id="qNum">04</span> ประสบการณ์การเทรด</div>
+        <div id="qBox"><p class="loading">กำลังโหลดคำถาม…</p></div>
+        <label class="f">มีคำถามเพิ่มเติมถึงทีมงาน <small>ไม่บังคับ</small>
+          <textarea name="note" maxlength="500" placeholder="เช่น สะดวกให้ติดต่อช่วงเย็น"></textarea>
+        </label>
+      </section>
+
+      <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+      <label class="consent">
+        <input type="checkbox" name="consent" required>
+        <span>ฉันยินยอมให้เก็บข้อมูลนี้เพื่อใช้ในการลงทะเบียนและติดต่อกลับ ตามพ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล (PDPA)</span>
+      </label>
+
+      <div class="err" id="err" role="alert"></div>
+      <button class="submit" type="submit" id="submitBtn">ลงทะเบียนฟรี <span aria-hidden="true">→</span></button>
+      <p class="foot-note">กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนส่ง</p>
+    </form>
+  </article>
+</section>
+
+<footer>
+  <div class="fb">
+    <svg class="logo" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="10" fill="#c9972b"/><path d="M8 28l8-8 5 4 11-12" stroke="#0f1218" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div><b id="footName">GOLD TRADE</b><span id="footTag"></span></div>
+  </div>
+  <p id="disclaimer"></p>
+</footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="okTitle">
+  <div class="modal-box">
+    <div class="check"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>
+    <h3 id="okTitle">ลงทะเบียนสำเร็จ!</h3>
+    <p id="okText"></p>
+    <div class="summary" id="okSummary"></div>
+    <div id="okLinks"></div>
+    <button class="btn ghost" type="button" id="okClose">ปิด</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const el = (tag, props = {}, ...kids) => {
+    const n = Object.assign(document.createElement(tag), props);
+    kids.forEach(k => n.append(k));
+    return n;
+  };
+  const form = $("regForm");
+  let cfg = null;
+
+  // นับจำนวนผู้เข้าชม + แหล่งที่มา (?src=facebook หรือ ?utm_source=...)
+  const params = new URLSearchParams(location.search);
+  const src = params.get("src") || params.get("utm_source") || "";
+  try {
+    if (!sessionStorage.getItem("reg_visit")) {
+      sessionStorage.setItem("reg_visit", "1");
+      fetch("/api/visit", {method: "POST", keepalive: true, headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({src, ref: document.referrer})}).catch(() => {});
+    }
+  } catch {}
+
+  function choice(name, type, value, label, required) {
+    const input = el("input", {type, name, value, required: !!required});
+    return el("label", {className: "opt"}, input, el("span", {textContent: label}));
+  }
+
+  function renderClasses(c) {
+    if (!c || !c.visible || !c.options?.length) return false;
+    $("classSec").hidden = false;
+    $("classTitle").textContent = c.title || "คลาสและวันเรียน";
+    const box = $("classBox");
+    const opts = el("div", {className: "opts block"});
+    c.options.forEach(o => opts.append(choice("classId", "radio", o.id, o.label, c.required)));
+    const dates = el("div", {className: "dates", hidden: true});
+    box.append(el("div", {className: "q"}, opts, dates));
+    opts.addEventListener("change", () => {
+      const o = c.options.find(x => x.id === form.classId.value);
+      dates.replaceChildren();
+      dates.hidden = !o?.dates?.length;
+      if (!o?.dates?.length) return;
+      const d = el("div", {className: "opts block"});
+      o.dates.forEach(t => d.append(choice("classDate", "radio", t, t, true)));
+      dates.append(el("div", {className: "q-title", textContent: "เลือกวันเรียน *"}), d);
+    });
+    return true;
+  }
+
+  function renderQuestions(qs) {
+    const box = $("qBox");
+    box.replaceChildren();
+    (qs || []).forEach(q => {
+      const opts = el("div", {className: "opts"});
+      q.options.forEach(o => opts.append(choice("q_" + q.id, q.multi ? "checkbox" : "radio", o.value, o.label, q.required && !q.multi)));
+      box.append(el("div", {className: "q"},
+        el("div", {className: "q-title"}, q.title, ...(q.required ? [" ", el("i", {className: "req", textContent: "*"})] : [])),
+        opts));
+    });
+  }
+
+  function renderCourse(c) {
+    if (!c || !c.visible) return;
+    const box = $("course");
+    box.hidden = false;
+    if (c.badge) box.append(el("span", {className: "badge", textContent: c.badge}));
+    box.append(el("h3", {textContent: c.title || ""}));
+    if (c.subtitle) box.append(el("p", {className: "sub", textContent: c.subtitle}));
+    (c.levels || []).forEach(l => box.append(el("div", {className: "lv"},
+      el("span", {className: "num", textContent: l.level}),
+      el("b", {textContent: l.title}),
+      el("small", {textContent: l.topics}))));
+  }
+
+  function applyConfig(c) {
+    cfg = c;
+    const b = c.brand || {};
+    const nameNode = $("brandName");
+    nameNode.replaceChildren(b.name + " ", el("b", {textContent: b.accent || ""}));
+    $("footName").textContent = [b.name, b.accent].filter(Boolean).join(" ");
+    $("footTag").textContent = b.tagline || "";
+    if (b.homeUrl) $("brandLink").href = b.homeUrl;
+    document.title = "ลงทะเบียน | " + [b.name, b.accent].filter(Boolean).join(" ");
+    const h = c.hero || {};
+    $("kicker").textContent = h.kicker || "";
+    $("heroTitle").textContent = h.title || "";
+    $("heroHighlight").textContent = h.highlight || "";
+    $("heroIntro").textContent = h.intro || "";
+    $("heroPurpose").textContent = h.purpose || "";
+    $("disclaimer").textContent = c.disclaimer || "";
+    if (c.phone) {
+      $("cc").textContent = `${c.phone.flag || ""} ${c.phone.countryCode || ""}`;
+      if (c.phone.placeholder) form.phone.placeholder = c.phone.placeholder;
+    }
+    renderCourse(c.course);
+    const hasClass = renderClasses(c.classes);
+    $("qNum").textContent = hasClass ? "04" : "03";
+    renderQuestions(c.questions);
+  }
+
+  function showError(msg, focusEl) {
+    $("err").textContent = msg;
+    $("err").classList.add("show");
+    if (focusEl) focusEl.focus({preventScroll: false});
+  }
+
+  function collect() {
+    const fd = new FormData(form);
+    const answers = {};
+    (cfg?.questions || []).forEach(q => {
+      const v = fd.getAll("q_" + q.id);
+      if (v.length) answers[q.id] = q.multi ? v : v[0];
+    });
+    return {
+      firstName: fd.get("firstName"), lastName: fd.get("lastName"),
+      phone: fd.get("phone"), email: fd.get("email"), lineId: fd.get("lineId"),
+      classId: fd.get("classId") || "", classDate: fd.get("classDate") || "",
+      answers, note: fd.get("note"), consent: !!fd.get("consent"),
+      website: fd.get("website"), src,
+    };
+  }
+
+  function validateLocal(d) {
+    if (!d.firstName.trim()) return ["กรุณากรอกชื่อ", form.firstName];
+    if (!d.lastName.trim()) return ["กรุณากรอกนามสกุล", form.lastName];
+    let p = d.phone.replace(/\D/g, "");
+    if (p.startsWith("66")) p = "0" + p.slice(2);
+    if (!p.startsWith("0")) p = "0" + p;
+    if (!/^0[689]\d{8}$/.test(p)) return ["เบอร์โทรไม่ถูกต้อง ตัวอย่าง: 081 234 5678", form.phone];
+    if (d.email && !form.email.checkValidity()) return ["อีเมลไม่ถูกต้อง", form.email];
+    const c = cfg?.classes;
+    if (c?.visible && c.required && !d.classId) return ["กรุณาเลือกคลาสที่ต้องการเรียน", form.querySelector("[name=classId]")];
+    const opt = c?.options?.find(o => o.id === d.classId);
+    if (opt?.dates?.length && !d.classDate) return ["กรุณาเลือกวันเรียน", form.querySelector("[name=classDate]")];
+    for (const q of cfg?.questions || []) {
+      if (q.required && !d.answers[q.id]) return ["กรุณาตอบคำถาม: " + q.title, form.querySelector(`[name="q_${q.id}"]`)];
+    }
+    if (!d.consent) return ["กรุณายินยอมให้ใช้ข้อมูลเพื่อการติดต่อกลับ", form.consent];
+    return null;
+  }
+
+  function showSuccess(d) {
+    const s = cfg.success || {};
+    $("okTitle").textContent = s.title || "ลงทะเบียนสำเร็จ!";
+    $("okText").textContent = s.text || "";
+    const opt = cfg.classes?.options?.find(o => o.id === d.classId);
+    const rows = [["ชื่อ", `${d.firstName} ${d.lastName}`], ["เบอร์โทร", d.phone]];
+    if (opt) rows.push(["คลาส", opt.label]);
+    if (d.classDate) rows.push(["วันเรียน", d.classDate]);
+    $("okSummary").replaceChildren(...rows.map(([k, v]) => el("div", {}, el("span", {textContent: k}), el("span", {textContent: v}))));
+    const links = $("okLinks");
+    links.replaceChildren();
+    const ct = cfg.contact || {};
+    if (s.groupUrl) links.append(el("a", {className: "btn line", href: s.groupUrl, target: "_blank", rel: "noopener", textContent: s.groupLabel || "เข้ากลุ่มนักเรียน"}));
+    if (ct.line) links.append(el("a", {className: "btn line", href: ct.line, target: "_blank", rel: "noopener", textContent: "ทักแชท LINE ทีมงาน"}));
+    if (ct.whatsapp) links.append(el("a", {className: "btn wa", href: ct.whatsapp, target: "_blank", rel: "noopener", textContent: "WhatsApp"}));
+    if (ct.messenger) links.append(el("a", {className: "btn ms", href: ct.messenger, target: "_blank", rel: "noopener", textContent: "Messenger"}));
+    $("modal").classList.add("show");
+    $("okClose").focus();
+  }
+
+  $("okClose").addEventListener("click", () => $("modal").classList.remove("show"));
+  $("modal").addEventListener("click", e => { if (e.target === $("modal")) $("modal").classList.remove("show"); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") $("modal").classList.remove("show"); });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    $("err").classList.remove("show");
+    const d = collect();
+    const bad = validateLocal(d);
+    if (bad) return showError(...bad);
+    const btn = $("submitBtn");
+    btn.disabled = true;
+    btn.firstChild.textContent = "กำลังส่งข้อมูล… ";
+    try {
+      const r = await fetch("/api/register", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(d)});
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(j.error || "บันทึกไม่สำเร็จ กรุณาลองใหม่");
+      showSuccess(d);
+      form.reset();
+      $("classBox").querySelector(".dates")?.replaceChildren();
+    } catch (err) {
+      showError(err instanceof TypeError ? "เชื่อมต่ออินเทอร์เน็ตไม่ได้ กรุณาตรวจสอบแล้วลองใหม่" : err.message);
+    } finally {
+      btn.disabled = false;
+      btn.firstChild.textContent = "ลงทะเบียนฟรี ";
+    }
+  });
+
+  fetch("/api/config", {cache: "no-store"})
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(applyConfig)
+    .catch((e) => {
+      console.error(e); $("qBox").replaceChildren(el("p", {className: "loading", textContent: "โหลดข้อมูลไม่สำเร็จ กรุณารีเฟรชหน้า"})); });
+})();
+</script>
+</body>
+</html>

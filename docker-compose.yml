@@ -7,3 +7,15 @@ services:
       - "8080:8080"
     volumes:
       - ./data:/data
+
+  registration:
+    build: ./registration
+    restart: always
+    environment:
+      - REG_ADMIN_TOKEN=${REG_ADMIN_TOKEN:-}
+      - REG_DISCORD_WEBHOOK=${REG_DISCORD_WEBHOOK:-}
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./data:/data
+      - ./registration/config.json:/app/config.json:ro
