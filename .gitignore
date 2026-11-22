@@ -2,3 +2,6 @@
 data/
 *.db
 __pycache__/
+
+# rendered videos (too large for git)
+video_out/*.mp4

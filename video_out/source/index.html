@@ -1,0 +1,312 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@400;600;700;800;900&family=Inter:wght@600;800;900&display=block" rel="stylesheet">
+<style>
+:root{--gold:#F5B942;--gold2:#FFDF8A;--orange:#FF7A1A;--red:#E8282E;--green:#2BD67B;--ink:#07080c;--panel:rgba(18,20,28,.82);--yellow:#FFD84A}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:var(--ink)}
+body{font-family:'Noto Sans Lao','Inter',sans-serif;color:#fff}
+.num{font-family:'Inter','Noto Sans Lao',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-2px}
+#stage{position:absolute;inset:0;overflow:hidden}
+#bg{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 35%,#1a1a24 0%,#0b0c12 55%,#050507 100%)}
+#grid{position:absolute;inset:-200px;background-image:linear-gradient(rgba(245,185,66,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(245,185,66,.06) 1px,transparent 1px);background-size:90px 90px}
+#glow{position:absolute;width:1400px;height:1400px;left:-160px;top:100px;border-radius:50%;background:radial-gradient(circle,rgba(245,170,60,.20),rgba(245,170,60,0) 60%)}
+.particle{position:absolute;border-radius:50%;background:radial-gradient(circle,#ffe7a3,#f5b94200 70%)}
+.scene{position:absolute;inset:0;display:none}
+.photo-bg{position:absolute;inset:-60px;background-size:cover;background-position:center;filter:blur(26px) brightness(.45) saturate(1.2)}
+.photo-card{position:absolute;left:60px;width:960px;border-radius:28px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.65),0 0 0 2px rgba(245,185,66,.35)}
+.photo-card .im{position:absolute;inset:0;background-size:cover;background-position:center}
+.photo-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.55))}
+.vig{position:absolute;inset:0;background:radial-gradient(130% 95% at 50% 45%,rgba(0,0,0,0) 55%,rgba(0,0,0,.75) 100%);pointer-events:none}
+.panel{position:absolute;background:var(--panel);border:2px solid rgba(255,255,255,.08);border-radius:34px;box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06)}
+.label{font-weight:700;color:#cfd3dc;font-size:40px}
+.src{position:absolute;font-family:'Inter';font-size:24px;color:rgba(255,255,255,.45);font-weight:600}
+.flag{display:inline-block;width:66px;height:44px;border-radius:6px;position:relative;overflow:hidden;vertical-align:middle;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.flag.la{background:linear-gradient(#CE1126 0 25%,#002868 25% 75%,#CE1126 75%)}
+.flag.la::after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;left:23px;top:12px}
+.flag.us{background:repeating-linear-gradient(#B22234 0 3.4px,#fff 3.4px 6.8px)}
+.flag.us::after{content:"";position:absolute;left:0;top:0;width:28px;height:24px;background:#3C3B6E}
+.chipTag{position:absolute;left:70px;top:1330px;display:none}
+.chipTag .t{display:inline-block;background:linear-gradient(90deg,var(--red),var(--orange));font-weight:900;font-size:42px;padding:6px 22px 10px;border-radius:10px 10px 10px 0}
+.chipTag .s{display:block;width:max-content;background:#fff;color:#111;font-weight:700;font-size:28px;padding:2px 16px 6px;border-radius:0 0 8px 8px}
+/* chrome */
+#logo{position:absolute;left:56px;top:62px;display:flex;align-items:center;gap:18px}
+#logo .mark{width:84px;height:84px;border-radius:22px;background:linear-gradient(145deg,#FFE08A,#F5B942 45%,#B9781B);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(245,185,66,.35)}
+#logo .name{font-family:'Inter';font-weight:900;font-size:46px;letter-spacing:1px;line-height:1}
+#logo .sub{font-weight:700;font-size:26px;color:var(--gold);margin-top:6px}
+#breaking{position:absolute;right:56px;top:80px;background:var(--red);font-family:'Inter';font-weight:900;font-size:30px;padding:10px 22px;border-radius:10px;display:flex;align-items:center;gap:12px;letter-spacing:2px}
+#breaking i{width:16px;height:16px;border-radius:50%;background:#fff;display:block}
+#prog{position:absolute;left:0;top:0;height:8px;background:linear-gradient(90deg,var(--gold),var(--orange))}
+#ticker{position:absolute;left:0;right:0;bottom:0;height:78px;background:#0d0e13;border-top:3px solid var(--red);overflow:hidden}
+#ticker .lt{position:absolute;left:0;top:0;bottom:0;width:190px;background:var(--red);font-family:'Inter';font-weight:900;font-size:32px;display:flex;align-items:center;justify-content:center;z-index:2;letter-spacing:2px}
+#tickTxt{position:absolute;left:190px;top:9px;white-space:nowrap;font-weight:700;font-size:36px;color:#e9e9ee}
+#tickTxt b{color:var(--gold)}
+#sub{position:absolute;left:60px;right:60px;top:1470px;text-align:center;font-weight:800;font-size:60px;line-height:1.38;color:var(--yellow);text-shadow:0 4px 0 #000,0 0 18px rgba(0,0,0,.9),3px 3px 0 #000,-3px -3px 0 #000,3px -3px 0 #000,-3px 3px 0 #000}
+#sub .hl{color:#FF8A2A}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#grain{position:absolute;inset:-100px;opacity:.07;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")}
+/* elements */
+.big{position:absolute;left:0;right:0;text-align:center}
+.pill{display:inline-block;padding:8px 26px 12px;border-radius:999px;font-weight:800;font-size:40px}
+.up{color:var(--green)} .down{color:var(--red)}
+svg{overflow:visible}
+</style></head>
+<body><div id="stage">
+ <div id="bg"></div><div id="grid"></div><div id="glow"></div><div id="parts"></div>
+
+ <!-- 1 HOOK -->
+ <div class="scene" id="s-hook">
+  <div class="photo-bg" style="background-image:url(img/gold_bullion_1.jpg)"></div>
+  <div class="photo-card" id="hookCard" style="top:240px;height:720px"><div class="im" style="background-image:url(img/gold_bullion_1.jpg)"></div></div>
+  <div class="big num" id="hookPct" style="top:880px;font-size:300px;font-weight:900;color:var(--red);text-shadow:0 12px 50px rgba(232,40,46,.55),0 6px 0 #000">-30%</div>
+  <div class="big" id="hookLbl" style="top:1210px;font-size:58px;font-weight:900">ລາຄາຄຳໂລກ <span style="color:var(--gold)">ຈາກຈຸດສູງສຸດ</span></div>
+ </div>
+
+ <!-- 2 PEAK -->
+ <div class="scene" id="s-peak">
+  <div class="panel" id="peakPanel" style="left:90px;top:330px;width:900px;height:860px">
+   <div style="position:absolute;top:60px;width:100%;text-align:center"><span class="flag us"></span>&nbsp; <span class="label">ສະຖິຕິສູງສຸດ · ມັງກອນ 2026</span></div>
+   <div class="num" id="peakNum" style="position:absolute;top:200px;width:100%;text-align:center;font-size:190px;font-weight:900;background:linear-gradient(180deg,#FFF1C2,#F5B942 55%,#C4831F);-webkit-background-clip:text;color:transparent">&gt;$5,400</div>
+   <div style="position:absolute;top:440px;width:100%;text-align:center;font-size:48px;font-weight:700;color:#cfd3dc">ໂດລາ ຕໍ່ ອອນ</div>
+   <svg id="peakSpark" width="760" height="230" style="position:absolute;left:70px;top:560px"><defs><linearGradient id="gA" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#F5B942" stop-opacity=".45"/><stop offset="1" stop-color="#F5B942" stop-opacity="0"/></linearGradient></defs>
+    <path id="peakArea" d="" fill="url(#gA)"/><path id="peakLine" d="" fill="none" stroke="#F5B942" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle id="peakDot" r="14" fill="#FFF1C2"/></svg>
+  </div>
+  <div class="src" style="left:110px;top:1205px">Source: World Gold Council via iForex · ພາບກຣາຟເປັນພາບປະກອບ</div>
+ </div>
+
+ <!-- 3 NOW -->
+ <div class="scene" id="s-now">
+  <div class="panel" style="left:90px;top:300px;width:900px;height:900px">
+   <svg width="900" height="560" style="position:absolute;left:0;top:40px">
+    <defs><linearGradient id="gR" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#E8282E" stop-opacity=".5"/><stop offset="1" stop-color="#E8282E" stop-opacity="0"/></linearGradient></defs>
+    <line x1="90" y1="470" x2="830" y2="470" stroke="rgba(255,255,255,.15)" stroke-width="2"/>
+    <path id="nowArea" fill="url(#gR)"/><path id="nowLine" fill="none" stroke="#E8282E" stroke-width="9" stroke-linecap="round"/>
+    <circle cx="140" cy="110" r="16" fill="#F5B942"/><circle id="nowDot" r="18" fill="#E8282E" stroke="#fff" stroke-width="5"/>
+    <text x="140" y="70" fill="#F5B942" font-family="Inter" font-weight="800" font-size="36" text-anchor="middle">&gt;$5,400</text>
+    <text x="140" y="520" fill="#aeb3bf" font-family="Noto Sans Lao" font-weight="700" font-size="30" text-anchor="middle">ມ.ກ. 2026</text>
+    <text x="780" y="520" fill="#aeb3bf" font-family="Noto Sans Lao" font-weight="700" font-size="30" text-anchor="middle">20 ພ.ຈ. 2026</text>
+   </svg>
+   <div id="nowBadge" style="position:absolute;right:60px;top:120px" class="pill num" ><span style="background:var(--red);padding:8px 24px 12px;border-radius:999px;font-size:46px;font-weight:900;letter-spacing:0">▼ &gt;30%</span></div>
+   <div class="num" id="nowNum" style="position:absolute;top:610px;width:100%;text-align:center;font-size:170px;font-weight:900;color:#ff4a50;text-shadow:0 10px 40px rgba(232,40,46,.45)">~$3,520</div>
+   <div style="position:absolute;top:810px;width:100%;text-align:center;font-size:40px;font-weight:700;color:#cfd3dc">ລາຄາສະປອດ · 20 ພະຈິກ 2026</div>
+  </div>
+  <div class="src" style="left:110px;top:1215px">Source: USA Today / AOL, 20 Nov 2026 (4 PM ET)</div>
+ </div>
+
+ <!-- 4 QUESTION -->
+ <div class="scene" id="s-q">
+  <div class="photo-bg" style="background-image:url(img/stock_exchan_1.jpg);filter:blur(22px) brightness(.35) grayscale(1)"></div>
+  <div class="photo-card" id="qCard" style="top:250px;height:760px;filter:grayscale(1) contrast(1.15)"><div class="im" style="background-image:url(img/stock_exchan_1.jpg)"></div></div>
+  <div class="big" id="q1" style="top:880px;font-size:118px;font-weight:900;text-shadow:0 8px 30px #000">ເກີດຫຍັງຂຶ້ນ?</div>
+  <div class="big" id="q2" style="top:1090px;font-size:76px;font-weight:900"><span class="up">ໂອກາດ</span> <span style="color:#aaa;font-size:56px">ຫຼື</span> <span class="down">ກັບດັກ</span>?</div>
+ </div>
+
+ <!-- 5 FED -->
+ <div class="scene" id="s-fed">
+  <div class="panel" id="fedPanel" style="left:90px;top:300px;width:900px;height:560px">
+   <div style="position:absolute;top:50px;width:100%;text-align:center"><span class="flag us"></span>&nbsp; <span class="label">Fed ຂຶ້ນອັດຕາດອກເບ້ຍ</span></div>
+   <div class="num" id="fedNum" style="position:absolute;top:160px;width:100%;text-align:center;font-size:150px;font-weight:900;color:#fff">3.75–4.00%</div>
+   <div style="position:absolute;top:370px;width:100%;text-align:center"><span class="pill" style="background:rgba(43,214,123,.15);color:var(--green)">▲ +0.25 · 16 ກັນຍາ 2026</span></div>
+   <div style="position:absolute;top:465px;width:100%;text-align:center;font-size:34px;color:#aeb3bf;font-weight:700">ຄັ້ງທຳອິດ ນັບແຕ່ປີ 2023</div>
+  </div>
+  <div class="panel" id="fedEq" style="left:90px;top:900px;width:900px;height:300px">
+   <div style="position:absolute;top:70px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:40px;font-weight:900;font-size:64px">
+    <span>ດອກເບ້ຍ <span class="up">▲</span></span><span style="color:#777">→</span><span style="color:var(--gold)">ຄຳ <span class="down">▼</span></span></div>
+   <div style="position:absolute;top:190px;width:100%;text-align:center;font-size:34px;color:#aeb3bf;font-weight:700">ຄຳ ບໍ່ໃຫ້ດອກເບ້ຍ → ໜ້າສົນໃຈໜ້ອຍລົງ</div>
+  </div>
+ </div>
+
+ <!-- 6 USD -->
+ <div class="scene" id="s-usd">
+  <div class="panel" id="usdA" style="left:90px;top:300px;width:900px;height:420px">
+   <div style="position:absolute;top:50px;width:100%;text-align:center"><span class="flag us"></span>&nbsp; <span class="label">ເງິນໂດລາສະຫະລັດ</span></div>
+   <div style="position:absolute;top:140px;width:100%;text-align:center;font-weight:900;font-size:150px"><span class="num" style="color:#7CE3A6">$</span> <span class="up num">▲ ~2%</span></div>
+   <div style="position:absolute;top:340px;width:100%;text-align:center;font-size:32px;color:#aeb3bf;font-weight:700">ແຂງຄ່າຂຶ້ນ · ກັນຍາ 2026</div>
+  </div>
+  <div class="panel" id="usdB" style="left:90px;top:770px;width:900px;height:430px">
+   <div style="position:absolute;top:50px;width:100%;text-align:center"><span class="label">ຜົນຕອບແທນພັນທະບັດ 10 ປີ</span></div>
+   <div class="num" id="usdNum" style="position:absolute;top:130px;width:100%;text-align:center;font-weight:900;font-size:170px;color:var(--orange)">5.3%</div>
+   <div style="position:absolute;top:350px;width:100%;text-align:center;font-size:32px;color:#aeb3bf;font-weight:700">ພັນທະບັດສະຫະລັດ · ກັນຍາ 2026</div>
+  </div>
+  <div class="src" style="left:110px;top:1215px">Source: World Gold Council via Golden Ark Reserve</div>
+ </div>
+
+ <!-- 7 AI -->
+ <div class="scene" id="s-ai">
+  <div class="photo-bg" style="background-image:url(img/stock_exchan_4.jpg);filter:blur(18px) brightness(.28) grayscale(1)"></div>
+  <div class="panel" style="left:90px;top:300px;width:900px;height:620px;overflow:hidden">
+   <div style="position:absolute;left:40px;top:34px;display:flex;gap:16px"><span class="pill" style="background:#232633;font-size:32px">TECH</span><span class="pill" style="background:#232633;font-size:32px">AI</span><span class="pill" style="background:rgba(232,40,46,.2);color:#ff5a5f;font-size:32px">SELL-OFF</span></div>
+   <svg id="candles" width="900" height="500" style="position:absolute;left:0;top:110px"></svg>
+  </div>
+  <div class="panel" id="aiFlow" style="left:90px;top:960px;width:900px;height:240px">
+   <div style="position:absolute;top:58px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:26px;font-weight:900;font-size:54px">
+    <span style="color:var(--gold)">ຂາຍຄຳ</span><span style="color:#777">→</span><span style="color:#7CE3A6">ເງິນສົດ</span><span style="color:#777">→</span><span>ປິດໜີ້</span></div>
+  </div>
+ </div>
+
+ <!-- 8 TURN -->
+ <div class="scene" id="s-turn">
+  <div class="photo-bg" style="background-image:url(img/gold_bullion_1.jpg);filter:blur(24px) brightness(.55) saturate(1.4)"></div>
+  <div class="photo-card" id="turnCard" style="top:250px;height:760px"><div class="im" style="background-image:url(img/gold_bullion_1.jpg)"></div></div>
+  <div class="big" id="turn1" style="top:830px;font-size:190px;font-weight:900;color:var(--gold2);text-shadow:0 10px 40px rgba(0,0,0,.9)">ແຕ່...</div>
+  <div class="big" id="turn2" style="top:1120px;font-size:66px;font-weight:900">ມີຄົນກຳລັງ <span class="up">ຊື້ເພີ່ມ ▲</span></div>
+ </div>
+
+ <!-- 9 CENTRAL BANKS -->
+ <div class="scene" id="s-cb">
+  <div class="panel" style="left:90px;top:290px;width:900px;height:930px">
+   <div style="position:absolute;top:44px;width:100%;text-align:center"><span class="label">🏦 ທະນາຄານກາງທົ່ວໂລກ ຊື້ຄຳ</span></div>
+   <div id="cbBadge" style="position:absolute;left:0;right:0;text-align:center;top:300px"><span class="pill num" style="background:var(--green);color:#04140b;font-size:50px;font-weight:900;letter-spacing:0">+42%</span></div>
+   <div style="position:absolute;left:110px;bottom:250px;width:260px;text-align:center">
+     <div class="num" id="cbV1" style="font-size:64px;font-weight:900;color:#aeb3bf">227</div>
+     <div id="cbB1" style="margin:12px auto 0;width:180px;background:#3a3f4f;border-radius:14px 14px 0 0"></div></div>
+   <div style="position:absolute;left:520px;bottom:250px;width:260px;text-align:center">
+     <div class="num" id="cbV2" style="font-size:80px;font-weight:900;color:var(--gold)">321</div>
+     <div id="cbB2" style="margin:12px auto 0;width:180px;background:linear-gradient(180deg,#FFE08A,#F5B942 40%,#B9781B);border-radius:14px 14px 0 0;box-shadow:0 0 40px rgba(245,185,66,.4)"></div></div>
+   <div style="position:absolute;left:60px;right:60px;bottom:248px;height:3px;background:rgba(255,255,255,.2)"></div>
+   <div style="position:absolute;left:110px;bottom:170px;width:260px;text-align:center;font-size:28px;font-weight:700;color:#aeb3bf;line-height:1.3">ສະເລ່ຍ/ໄຕມາດ<br>5 ປີ (ໂຕນ)</div>
+   <div style="position:absolute;left:520px;bottom:170px;width:260px;text-align:center;font-size:28px;font-weight:700;color:#fff;line-height:1.3">ໄຕມາດ 3/2026<br>(ໂຕນ)</div>
+   <div id="cbTotal" style="position:absolute;left:60px;right:60px;bottom:40px;height:100px;border-radius:22px;background:rgba(245,185,66,.12);border:2px solid rgba(245,185,66,.4);display:flex;align-items:center;justify-content:center;gap:20px;font-weight:800;font-size:44px">ລວມ 9 ເດືອນ: <span class="num" id="cbTot" style="color:var(--gold);font-size:60px;font-weight:900">675</span> ໂຕນ</div>
+  </div>
+  <div class="src" style="left:110px;top:1235px">Source: World Gold Council, Gold Demand Trends Q3 2026</div>
+ </div>
+
+ <!-- 10 ETF -->
+ <div class="scene" id="s-etf">
+  <div class="panel" style="left:90px;top:290px;width:900px;height:930px">
+   <div style="position:absolute;top:44px;width:100%;text-align:center"><span class="label">ກອງທຶນ ETF ຄຳ ທົ່ວໂລກ ຖືຄຳລວມ</span></div>
+   <div class="num" id="etfNum" style="position:absolute;top:140px;width:100%;text-align:center;font-size:200px;font-weight:900;background:linear-gradient(180deg,#FFF1C2,#F5B942 55%,#C4831F);-webkit-background-clip:text;color:transparent">4,256</div>
+   <div style="position:absolute;top:385px;width:100%;text-align:center;font-size:52px;font-weight:800">ໂຕນ</div>
+   <div id="etfRec" style="position:absolute;top:470px;width:100%;text-align:center"><span class="pill" style="background:var(--red);font-size:44px;font-weight:900">🏆 ສູງສຸດເປັນປະຫວັດການ</span></div>
+   <div id="etfBars" style="position:absolute;left:0;right:0;top:600px;height:220px"></div>
+   <div id="etfIn" style="position:absolute;bottom:40px;width:100%;text-align:center;font-size:40px;font-weight:800">ໄຕມາດ 3: <span class="up num" style="font-size:54px;font-weight:900">+211</span> ໂຕນ</div>
+  </div>
+  <div class="src" style="left:110px;top:1235px">Source: World Gold Council, Q3 2026</div>
+ </div>
+
+ <!-- 11 LAO -->
+ <div class="scene" id="s-lao">
+  <div class="panel" style="left:90px;top:300px;width:900px;height:900px">
+   <div style="position:absolute;top:60px;width:100%;text-align:center"><span class="flag la" style="width:96px;height:64px"></span></div>
+   <div id="laoA" style="position:absolute;top:170px;width:100%;text-align:center;font-weight:900;font-size:74px;color:var(--gold)">ລາຄາຄຳໃນລາວ</div>
+   <div id="laoEq" style="position:absolute;top:300px;width:100%;text-align:center;font-weight:900;font-size:90px;color:#777">=</div>
+   <div id="laoB" style="position:absolute;left:70px;top:440px;width:340px;height:240px;border-radius:26px;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.12);text-align:center">
+     <div style="font-size:90px;margin-top:20px">🌍</div><div style="font-weight:800;font-size:38px">ລາຄາຄຳໂລກ</div><div class="num" style="font-size:30px;color:#aeb3bf;letter-spacing:0">USD / oz</div></div>
+   <div id="laoX" style="position:absolute;left:410px;top:500px;width:80px;text-align:center;font-weight:900;font-size:90px;color:#777">×</div>
+   <div id="laoC" style="position:absolute;left:490px;top:440px;width:340px;height:240px;border-radius:26px;background:rgba(255,255,255,.05);border:2px solid rgba(255,255,255,.12);text-align:center">
+     <div style="font-size:90px;margin-top:20px">💱</div><div style="font-weight:800;font-size:38px">ອັດຕາແລກປ່ຽນ</div><div class="num" style="font-size:30px;color:#aeb3bf;letter-spacing:0">USD → LAK (ກີບ)</div></div>
+   <div style="position:absolute;bottom:60px;width:100%;text-align:center;font-size:32px;font-weight:700;color:#aeb3bf">ກີບອ່ອນ → ຄຳໃນລາວແພງຂຶ້ນ ເຖິງວ່າລາຄາໂລກຈະຄົງທີ່</div>
+  </div>
+ </div>
+
+ <!-- 12 WATCH -->
+ <div class="scene" id="s-watch">
+  <div class="big" id="wTitle" style="top:290px;font-size:76px;font-weight:900">👀 ສິ່ງທີ່ຕ້ອງ<span style="color:var(--gold)">ຈັບຕາເບິ່ງ</span></div>
+  <div id="w1" class="panel" style="left:90px;top:470px;width:900px;height:210px"><div style="position:absolute;left:40px;top:45px;width:120px;height:120px;border-radius:30px;background:var(--gold);color:#111;font-family:Inter;font-weight:900;font-size:76px;display:flex;align-items:center;justify-content:center">1</div><div style="position:absolute;left:200px;top:50px;font-weight:900;font-size:52px">ກອງປະຊຸມ Fed</div><div style="position:absolute;left:200px;top:122px;font-weight:700;font-size:34px;color:#aeb3bf">ເດືອນທັນວາ 2026 · ຈະຂຶ້ນດອກເບ້ຍອີກບໍ?</div></div>
+  <div id="w2" class="panel" style="left:90px;top:720px;width:900px;height:210px"><div style="position:absolute;left:40px;top:45px;width:120px;height:120px;border-radius:30px;background:var(--gold);color:#111;font-family:Inter;font-weight:900;font-size:76px;display:flex;align-items:center;justify-content:center">2</div><div style="position:absolute;left:200px;top:50px;font-weight:900;font-size:52px">ຄ່າເງິນໂດລາ</div><div style="position:absolute;left:200px;top:122px;font-weight:700;font-size:34px;color:#aeb3bf">ໂດລາແຂງ = ແຮງກົດດັນຕໍ່ຄຳ</div></div>
+  <div id="w3" class="panel" style="left:90px;top:970px;width:900px;height:210px"><div style="position:absolute;left:40px;top:45px;width:120px;height:120px;border-radius:30px;background:var(--gold);color:#111;font-family:Inter;font-weight:900;font-size:76px;display:flex;align-items:center;justify-content:center">3</div><div style="position:absolute;left:200px;top:50px;font-weight:900;font-size:52px">ທະນາຄານກາງຊື້ຄຳ</div><div style="position:absolute;left:200px;top:122px;font-weight:700;font-size:34px;color:#aeb3bf">ແຮງຊື້ໃຫຍ່ທີ່ສຸດຂອງຕະຫຼາດ</div></div>
+ </div>
+
+ <!-- 13 END -->
+ <div class="scene" id="s-end">
+  <div class="photo-bg" style="background-image:url(img/gold_bullion_1.jpg);filter:blur(28px) brightness(.35)"></div>
+  <div class="big num" id="e1" style="top:250px;font-size:120px;font-weight:900">ຄຳຮ່ວງ <span style="color:var(--red)">30%</span></div>
+  <div id="e2" class="panel" style="left:90px;top:430px;width:430px;height:300px;border-color:rgba(43,214,123,.5)"><div style="font-size:90px;text-align:center;margin-top:36px">🟢</div><div style="text-align:center;font-weight:900;font-size:52px;color:var(--green)">ໂອກາດຊື້?</div></div>
+  <div id="e3" class="panel" style="left:560px;top:430px;width:430px;height:300px;border-color:rgba(232,40,46,.5)"><div style="font-size:90px;text-align:center;margin-top:36px">🔴</div><div style="text-align:center;font-weight:900;font-size:52px;color:#ff5a5f">ສັນຍານອັນຕະລາຍ?</div></div>
+  <div id="e4" class="big" style="top:770px"><span class="pill" style="background:#fff;color:#111;font-size:50px;font-weight:900;padding:16px 40px 22px">💬 ຂຽນຄວາມຄິດເຫັນ ໃນຄອມເມັ້ນ</span></div>
+  <div id="eLogo" style="position:absolute;left:0;right:0;top:900px;display:flex;flex-direction:column;align-items:center;gap:14px">
+   <div style="width:170px;height:170px;border-radius:44px;background:linear-gradient(145deg,#FFE08A,#F5B942 45%,#B9781B);display:flex;align-items:center;justify-content:center;box-shadow:0 0 70px rgba(245,185,66,.5)"><svg width="110" height="90" viewBox="0 0 44 36"><path d="M4 34 L10 22 H22 L28 34Z M16 20 L22 8 H34 L40 20Z M22 34 L28 22 H40 L44 34Z" fill="#3b2405"/></svg></div>
+   <div style="font-family:Inter;font-weight:900;font-size:64px;letter-spacing:2px">GOLD TRADE</div>
+   <div style="font-weight:700;font-size:34px;color:var(--gold)">ກົດຕິດຕາມ ເພື່ອບໍ່ພາດຂ່າວຄຳ</div>
+  </div>
+  <div class="big" style="top:1262px;font-size:28px;font-weight:600;color:rgba(255,255,255,.55)">ຂໍ້ມູນເພື່ອການສຶກສາ · ບໍ່ແມ່ນຄຳແນະນຳການລົງທຶນ</div>
+ </div>
+
+ <div class="vig"></div>
+ <div class="chipTag" id="chip"><span class="t" id="chipT"></span><span class="s" id="chipS"></span></div>
+ <div id="sub"></div>
+ <div id="logo"><div class="mark"><svg width="56" height="46" viewBox="0 0 44 36"><path d="M4 34 L10 22 H22 L28 34Z M16 20 L22 8 H34 L40 20Z M22 34 L28 22 H40 L44 34Z" fill="#3b2405"/></svg></div><div><div class="name">GOLD TRADE</div><div class="sub">ຂ່າວຕະຫຼາດຄຳ</div></div></div>
+ <div id="breaking"><i id="bdot"></i>BREAKING</div>
+ <div id="ticker"><div class="lt">LATEST</div><div id="tickTxt"></div></div>
+ <div id="prog"></div>
+ <div id="grain"></div>
+ <div id="flash"></div>
+</div>
+<script>
+const TL = __TIMELINE__;
+const $ = id => document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const P=(t,a,b)=>clamp((t-a)/(b-a));
+const eo=x=>1-Math.pow(1-x,3);
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const eback=x=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const fmt=n=>Math.round(n).toLocaleString('en-US');
+function pop(el,t,a,dur=.45,from=.7,dy=40){const p=P(t,a,a+dur);el.style.opacity=clamp(p*2.5);el.style.transform=`translateY(${(1-eo(p))*dy}px) scale(${from+(1-from)*eback(p)})`;}
+function slideL(el,t,a,dur=.5){const p=eo(P(t,a,a+dur));el.style.opacity=p;el.style.transform=`translateX(${(1-p)*-140}px)`;}
+// ticker text
+const tick='<b>ຄຳໂລກ</b> ~$3,520/ອອນ &nbsp;•&nbsp; ຕ່ຳກວ່າຈຸດສູງສຸດ <b>&gt;30%</b> &nbsp;•&nbsp; Fed ຂຶ້ນດອກເບ້ຍ <b>3.75–4.00%</b> &nbsp;•&nbsp; ທະນາຄານກາງຊື້ <b>321 ໂຕນ</b> ໄຕມາດ 3 &nbsp;•&nbsp; ETF ຖືຄຳ <b>4,256 ໂຕນ</b> ສູງສຸດ &nbsp;•&nbsp; ';
+$('tickTxt').innerHTML=tick+tick+tick+tick;
+// particles
+const parts=[];let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+for(let i=0;i<38;i++){const d=document.createElement('div');d.className='particle';const s=6+rnd()*22;d.style.width=d.style.height=s+'px';$('parts').appendChild(d);parts.push({d,x:rnd()*1080,y:rnd()*1920,v:12+rnd()*40,ph:rnd()*6.28,a:.25+rnd()*.6});}
+// candles
+(function(){const svg=$('candles');let y=120,h='';const n=18;for(let i=0;i<n;i++){const x=50+i*44;const dn=(i%5!==2);const o=y,c=y+(dn?20+((i*37)%40):-(14+((i*13)%20)));const hi=Math.min(o,c)-10-((i*7)%16),lo=Math.max(o,c)+10+((i*11)%16);const col=dn?'#E8282E':'#2BD67B';h+=`<g class="cd" data-i="${i}"><line x1="${x+12}" x2="${x+12}" y1="${hi}" y2="${lo}" stroke="${col}" stroke-width="4"/><rect x="${x}" y="${Math.min(o,c)}" width="24" height="${Math.max(6,Math.abs(c-o))}" rx="3" fill="${col}"/></g>`;y=c;}svg.innerHTML=h;})();
+// etf bars
+(function(){let h='';for(let i=0;i<12;i++){h+=`<div class="eb" style="position:absolute;bottom:0;left:${90+i*62}px;width:46px;border-radius:8px 8px 0 0;background:linear-gradient(180deg,#FFE08A,#F5B942 40%,#B9781B)"></div>`}$('etfBars').innerHTML=h;})();
+const etfH=[90,96,104,98,108,120,132,140,150,170,192,214];
+const CHIPS={hook:['ຄຳຮ່ວງໜັກ','ລາຄາຄຳໂລກ 2026'],peak:['ຈຸດສູງສຸດ','ມັງກອນ 2026'],now:['ລາຄາລ່າສຸດ','20 ພະຈິກ 2026'],q:['ຄຳຖາມໃຫຍ່','ໂອກາດ ຫຼື ກັບດັກ?'],fed:['ສາເຫດ 1/3','ດອກເບ້ຍສະຫະລັດ'],usd:['ສາເຫດ 2/3','ໂດລາ ແລະ ພັນທະບັດ'],ai:['ສາເຫດ 3/3','ຫຸ້ນເທັກ-AI ຖືກຂາຍ'],turn:['ແຕ່...','ອີກດ້ານໜຶ່ງ'],cb:['ທະນາຄານກາງ','ຊື້ຄຳບໍ່ຢຸດ'],etf:['ກອງທຶນ ETF','ສະຖິຕິໃໝ່'],lao:['ຜົນກະທົບຕໍ່ລາວ','ລາຄາຄຳໃນຮ້ານ'],watch:['ຕ້ອງຈັບຕາ','ສັນຍານຕໍ່ໄປ'],end:['ທ່ານຄິດແນວໃດ?','ສະແດງຄວາມຄິດເຫັນ']};
+function hl(s){return s.replace(/([<>~]?\$?[0-9][0-9,.–-]*%?|AI|ETF|Fed)/g,'<span class="hl">$1</span>')}
+let lastSub='';
+window.render=function(t){
+  const D=TL.duration;
+  $('prog').style.width=(t/D*1080)+'px';
+  $('grid').style.transform=`translate(${(t*18)%90}px,${(t*30)%90}px)`;
+  $('glow').style.transform=`translate(${Math.sin(t*.3)*80}px,${Math.cos(t*.23)*60}px)`;
+  for(const p of parts){let y=(p.y-t*p.v)%1920;if(y<0)y+=1920;p.d.style.transform=`translate(${p.x+Math.sin(t*.6+p.ph)*30}px,${y}px)`;p.d.style.opacity=p.a*(0.6+0.4*Math.sin(t*1.3+p.ph));}
+  $('tickTxt').style.transform=`translateX(${-(t*110)%($('tickTxt').scrollWidth/4)}px)`;
+  $('bdot').style.opacity=(Math.floor(t*2)%2)?.25:1;
+  $('grain').style.transform=`translate(${(Math.floor(t*24)*37)%100}px,${(Math.floor(t*24)*53)%100}px)`;
+  let sc=TL.scenes.find(s=>t>=s.start&&t<s.end)||TL.scenes[TL.scenes.length-1];
+  for(const s of TL.scenes){$('s-'+s.id).style.display=(s===sc)?'block':'none';}
+  const lt=t-sc.start, sd=sc.end-sc.start, C=sc.chunks.map(c=>c.start-sc.start);
+  // scene transition: zoom-in + flash
+  const tin=P(lt,0,.45); const el=$('s-'+sc.id);
+  el.style.opacity=eo(tin); el.style.transform=`scale(${1.08-0.08*eo(tin)})`; el.style.filter=tin<1?`blur(${(1-tin)*14}px)`:'none';
+  $('flash').style.opacity=sc.id==='hook'?0:clamp(.35-lt*1.2);
+  // chip
+  const ch=CHIPS[sc.id];$('chipT').textContent=ch[0];$('chipS').textContent=ch[1];$('chip').style.display='block';slideL($('chip'),lt,.15);
+  // subtitles
+  const cur=sc.chunks.find(c=>t>=c.start-0.05&&t<c.end+0.2) ;
+  const sub=$('sub');
+  if(cur){ if(lastSub!==cur.text){sub.innerHTML=hl(cur.text);lastSub=cur.text;} const p=P(t,cur.start-0.05,cur.start+.17);sub.style.opacity=clamp(p*3);sub.style.transform=`scale(${.9+.1*eback(p)})`;}
+  else {sub.style.opacity=0;}
+  S[sc.id]&&S[sc.id](lt,sd,C);
+};
+const S={
+ hook(lt,sd,C){const c=$('hookCard');c.style.transform=`scale(${1.0+lt*0.025})`;c.querySelector('.im').style.transform=`scale(${1.15+lt*.03}) translateY(${lt*-6}px)`;
+   const p=P(lt,1.05,1.4);const pc=$('hookPct');pc.style.opacity=clamp(p*3);const sh=lt>1.3&&lt<1.75?Math.sin(lt*90)*14*(1.75-lt)/.45:0;pc.style.transform=`translateX(${sh}px) scale(${2.2-1.2*eo(p)})`;
+   pop($('hookLbl'),lt,C[1]-.1);},
+ peak(lt,sd,C){pop($('peakPanel'),lt,.05,.5,.85);const p=eo(P(lt,.3,C[1]+.9));$('peakNum').textContent='>$'+fmt(3800+1600*p);
+   // sparkline rising (illustrative)
+   const pts=[];const n=40;const q=eio(P(lt,.3,C[1]+1));for(let i=0;i<=n*q;i++){const x=i/n*760;const y=200-(Math.pow(i/n,1.6)*170)-Math.sin(i*1.7)*10*(i/n);pts.push([x,y]);}
+   if(pts.length>1){$('peakLine').setAttribute('d','M'+pts.map(p=>p.join(',')).join('L'));$('peakArea').setAttribute('d','M'+pts.map(p=>p.join(',')).join('L')+`L${pts[pts.length-1][0]},230L0,230Z`);const l=pts[pts.length-1];$('peakDot').setAttribute('cx',l[0]);$('peakDot').setAttribute('cy',l[1]);}},
+ now(lt,sd,C){const q=eio(P(lt,.2,C[1]+.6));const n=30;const pts=[];for(let i=0;i<=n*q;i++){const f=i/n;const x=140+f*640;const y=110+f*300+Math.sin(f*14)*18*(1-f)*(f>0?1:0);pts.push([x,y])}
+   if(pts.length>1){const d='M'+pts.map(p=>p.join(',')).join('L');$('nowLine').setAttribute('d',d);$('nowArea').setAttribute('d',d+`L${pts[pts.length-1][0]},470L140,470Z`);const l=pts[pts.length-1];$('nowDot').setAttribute('cx',l[0]);$('nowDot').setAttribute('cy',l[1]);}
+   pop($('nowBadge'),lt,C[1]+.4,.4,.5,0);const p=eo(P(lt,C[1],C[1]+1.1));$('nowNum').textContent='~$'+fmt(5400-1880*p);pop($('nowNum'),lt,C[1]-.1,.4,.85,20);},
+ q(lt,sd,C){$('qCard').querySelector('.im').style.transform=`scale(${1.1+lt*.04})`;pop($('q1'),lt,.15,.4,1.4,0);pop($('q2'),lt,C[1],.4,.6,30);},
+ fed(lt,sd,C){pop($('fedPanel'),lt,.05,.5,.85);const p=P(lt,.4,.7);$('fedNum').style.transform=`scale(${1.5-.5*eo(p)})`;$('fedNum').style.opacity=clamp(p*2);pop($('fedEq'),lt,C[2]-.1,.5,.8);},
+ usd(lt,sd,C){pop($('usdA'),lt,.05,.5,.85);pop($('usdB'),lt,C[1]-.1,.5,.85);const p=eo(P(lt,C[1],C[1]+1));$('usdNum').textContent=(4.0+1.3*p).toFixed(1)+'%';},
+ ai(lt,sd,C){const g=document.querySelectorAll('#candles .cd');const n=g.length;const q=P(lt,.2,C[1]+1);g.forEach((e,i)=>{const a=clamp(q*n-i);e.style.opacity=a;e.style.transform=`translateY(${(1-a)*-30}px)`});
+   const sh=lt>.3&&lt<.6?Math.sin(lt*80)*6:0;$('candles').style.transform=`translateX(${sh}px)`;pop($('aiFlow'),lt,C[1]-.05,.5,.8);},
+ turn(lt,sd,C){const c=$('turnCard');c.querySelector('.im').style.transform=`scale(${1.12+lt*.05})`;c.style.filter=`brightness(${.6+.4*eo(P(lt,0,1.5))})`;pop($('turn1'),lt,.1,.6,1.3,0);pop($('turn2'),lt,C[1]-.05,.45,.7);},
+ cb(lt,sd,C){const p1=eo(P(lt,.3,1.2)),p2=eo(P(lt,.9,C[0]+3.2));$('cbB1').style.height=(227*1.15*p1)+'px';$('cbB2').style.height=(321*1.15*p2)+'px';$('cbV1').textContent=fmt(227*p1);$('cbV2').textContent=fmt(321*p2);
+   pop($('cbBadge'),lt,C[1]-.05,.4,.4,0);pop($('cbTotal'),lt,C[2]-.1,.45,.85);$('cbTot').textContent=fmt(675*eo(P(lt,C[2],C[2]+1.2)));},
+ etf(lt,sd,C){const p=eo(P(lt,.2,C[1]+1));$('etfNum').textContent=fmt(4045+211*p);$('etfNum').style.transform=`scale(${1+.04*Math.sin(lt*3)})`;
+   document.querySelectorAll('.eb').forEach((e,i)=>{const a=eo(P(lt,.2+i*.12,.6+i*.12));e.style.height=(etfH[i]*a)+'px';});pop($('etfIn'),lt,.4,.4,.8);pop($('etfRec'),lt,C[2]-.1,.45,.4,0);},
+ lao(lt,sd,C){pop($('laoA'),lt,.1,.45);pop($('laoEq'),lt,C[1]-.1,.3,.5,0);pop($('laoB'),lt,C[1]+.2,.4,.7);pop($('laoX'),lt,C[1]+.7,.3,.4,0);pop($('laoC'),lt,C[1]+1.1,.4,.7);},
+ watch(lt,sd,C){pop($('wTitle'),lt,.05,.45,.8);slideL($('w1'),lt,C[1]-.1);slideL($('w2'),lt,C[2]-.1);slideL($('w3'),lt,C[3]-.1);},
+ end(lt,sd,C){pop($('e1'),lt,.05,.45,1.3,0);pop($('e2'),lt,C[1]-.1,.45,.7);pop($('e3'),lt,C[2]-.1,.45,.7);pop($('e4'),lt,C[3]-.1,.4,.7);pop($('eLogo'),lt,C[3]+2.2,.6,.6,40);}
+};
+window.ready=document.fonts.ready.then(()=>{render(0);return true});
+</script></body></html>
